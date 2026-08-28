@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VaniVeda Admin</title>
+<meta name="description" content="VaniVeda submissions dashboard — internal use only.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="../assets/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="shortcut icon" href="../assets/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="VaniVeda">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-bg: #F7F5F2; --color-surface: #FFFFFF;
+    --color-text: #201E1D; --color-text-soft: #6B6664;
+    --color-accent: #D62839; --color-accent-100: #FBE1E3; --color-accent-400: #E2818C;
+    --color-accent-700: #B01F2E; --color-accent-800: #7A121C;
+    --color-graphite: #1F2933; --color-gold: #F5A623;
+    --color-neutral-100: #F1EEEC; --color-neutral-200: #EAE7E7; --color-neutral-300: #E1DCD9;
+    --color-neutral-500: #9B9797; --color-neutral-600: #605D5D; --color-neutral-700: #4A4746; --color-neutral-900: #201E1D;
+    --font-heading: 'Oswald', 'Archivo', sans-serif; --font-body: 'Archivo', sans-serif;
+    --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+    --space-5: 20px; --space-6: 24px; --space-7: 28px; --space-8: 32px;
+    --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px;
+    --shadow-sm: 0 1px 2px rgba(32,30,29,0.05), 0 1px 3px rgba(32,30,29,0.06);
+    --shadow-md: 0 2px 6px rgba(32,30,29,0.04), 0 10px 24px rgba(32,30,29,0.08);
+    --shadow-lg: 0 8px 18px rgba(32,30,29,0.06), 0 24px 48px rgba(32,30,29,0.12);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-text); }
+  input, select, textarea, button { font-family: var(--font-body); }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 2px; }
+  h1, h2, h3 { font-family: var(--font-heading); }
+  .rule { height: 1px; background: var(--color-neutral-300); }
+
+  .input {
+    border: 1.5px solid var(--color-neutral-300); background: #fff; color: var(--color-text);
+    border-radius: var(--radius-sm); padding: 10px 12px; font-size: 14px; width: 100%;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .input:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-100); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1.5px solid var(--color-neutral-300); background: #fff; color: var(--color-text);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: #fff; box-shadow: 0 2px 8px rgba(214,40,57,0.28); }
+  .btn-primary:hover { background: var(--color-accent-700); border-color: var(--color-accent-700); box-shadow: 0 6px 16px rgba(214,40,57,0.34); }
+  .btn:not([disabled]):hover { transform: translateY(-1px); }
+  .btn:not([disabled]):active { transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:not([disabled]):hover { transform: none; } }
+  .btn-secondary:hover { background: var(--color-accent-100); border-color: var(--color-accent); color: var(--color-accent-800); }
+  .btn-ghost { border-color: transparent; background: transparent; }
+  .btn-ghost:hover { background: var(--color-neutral-100); }
+  .sidebar .btn-ghost:hover { background: rgba(255,255,255,0.12); }
+  .btn-block { width: 100%; }
+  .btn[disabled] { opacity: 0.5; cursor: default; }
+
+  /* ---------- Login ---------- */
+  #login-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(214,40,57,0.38), transparent 55%),
+      linear-gradient(155deg, var(--color-graphite) 0%, var(--color-neutral-900) 100%);
+  }
+  .login-card {
+    width: 100%; max-width: 400px; background: #fff; border-radius: var(--radius-lg);
+    padding: var(--space-8); box-shadow: var(--shadow-lg);
+    border-top: 4px solid var(--color-accent);
+  }
+  #login-preview-hint { background: var(--color-accent-100); border-left: 4px solid var(--color-accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 12px; line-height: 1.5; color: var(--color-accent-800); padding: var(--space-3); margin: 0 0 var(--space-4); display: none; }
+  #login-remote-hint { background: var(--color-neutral-100); border-left: 4px solid var(--color-neutral-500); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 12px; line-height: 1.5; color: var(--color-neutral-700); padding: var(--space-3); margin: 0 0 var(--space-4); display: none; }
+  #login-error { font-size: 12px; color: var(--color-accent-700); margin: var(--space-3) 0 0; min-height: 16px; }
+
+  /* ---------- Shell ---------- */
+  .shell { display: flex; min-height: 100vh; align-items: stretch; }
+  .sidebar {
+    width: 240px; flex: none; display: flex; flex-direction: column; padding: var(--space-6) 0;
+    background: linear-gradient(190deg, var(--color-graphite) 0%, var(--color-neutral-900) 100%);
+    color: #fff;
+  }
+  /* On desktop the sidebar is pinned to exactly the viewport height and
+     never grows taller with main content — a long table scrolls the page
+     under it instead of stretching its dark background along with it.
+     Scoped to desktop only — see the max-width:780px block below, where
+     the sidebar becomes a horizontal top strip sized to its own content. */
+  @media (min-width: 781px) {
+    .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  }
+  .sidebar .brand { padding: 0 var(--space-6) var(--space-6); display: flex; align-items: center; gap: 10px; }
+  .sidebar .brand img { height: 26px; width: auto; display: block; flex: none; }
+  .sidebar .brand .brand-text { display: flex; flex-direction: column; }
+  .sidebar .brand .eyebrow { font-weight: 800; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-accent-400); margin: 0; }
+  .sidebar .brand .title { font-weight: 700; font-size: 17px; line-height: 1.15; margin: 0; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.02em; }
+  .rule-v { height: 1px; background: rgba(255,255,255,0.12); margin: 0 var(--space-6); }
+  .nav-list { list-style: none; flex: 1; display: flex; flex-direction: column; padding: var(--space-3) var(--space-3) 0; margin: 0; gap: 2px; }
+  .nav-item {
+    display: flex; align-items: center; gap: var(--space-3);
+    width: 100%; text-align: left; background: transparent; color: rgba(255,255,255,0.66);
+    border: 0; border-radius: var(--radius-sm); padding: 10px var(--space-3);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .nav-item svg { width: 17px; height: 17px; flex: none; opacity: 0.85; }
+  .nav-item span:not(.nav-count) { flex: 1; }
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+  .nav-item.active { background: var(--color-accent); color: #fff; box-shadow: 0 4px 12px rgba(214,40,57,0.35); }
+  .nav-item.active svg { opacity: 1; }
+  .nav-count { font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.16); color: #fff; padding: 2px 8px; border-radius: 999px; }
+  .nav-item.active .nav-count { background: rgba(255,255,255,0.25); }
+  .sidebar-actions { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) var(--space-3) 0; }
+
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar { background: #fff; border-bottom: 1px solid var(--color-neutral-200); padding: var(--space-4) var(--space-6); display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
+  .topbar h1 { font-weight: 700; font-size: 26px; line-height: 1; letter-spacing: -0.01em; margin: 0; text-transform: uppercase; }
+  .topbar .sub { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-neutral-600); margin: 0; }
+
+  #preview-banner { background: var(--color-accent-100); border-bottom: 2px solid var(--color-accent); font-size: 13px; line-height: 1.5; color: var(--color-accent-800); padding: var(--space-3) var(--space-8); margin: 0; display: none; }
+  #preview-banner strong { color: var(--color-accent-800); }
+  #remote-banner { background: var(--color-neutral-100); border-bottom: 2px solid var(--color-neutral-500); font-size: 13px; line-height: 1.5; color: var(--color-neutral-700); padding: var(--space-3) var(--space-8); margin: 0; display: none; }
+  #remote-banner strong { color: var(--color-neutral-900); }
+  #error-banner { padding: var(--space-4); background: var(--color-accent-100); color: var(--color-accent-800); border-radius: var(--radius-sm); font-size: 13px; margin: 0 0 var(--space-6); display: none; }
+  #loading-note { padding: var(--space-8); text-align: center; color: var(--color-neutral-600); font-size: 14px; }
+
+  .content { padding: var(--space-6); flex: 1; }
+
+  /* ---------- Overview ---------- */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); }
+  .stat-card { background: #fff; border: 1px solid var(--color-neutral-200); border-top: 3px solid var(--color-accent); border-radius: var(--radius-md); padding: var(--space-4) var(--space-4) var(--space-3); box-shadow: var(--shadow-sm); transition: box-shadow .15s ease, transform .15s ease; }
+  .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .stat-card .num { font-family: var(--font-heading); font-weight: 700; font-size: 34px; line-height: 0.9; margin: 0; }
+  .stat-card .label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-neutral-600); margin: var(--space-2) 0 0; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: var(--space-4); align-items: start; margin-top: var(--space-4); }
+  .panel { background: #fff; border: 1px solid var(--color-neutral-200); border-radius: var(--radius-md); padding: var(--space-5); box-shadow: var(--shadow-sm); }
+  .panel h2 { font-weight: 800; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 var(--space-4); color: var(--color-neutral-700); }
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-2); }
+  .panel-head h2 { margin: 0; }
+  .panel-head .big { font-family: var(--font-heading); font-weight: 700; font-size: 20px; line-height: 1; margin: 0; color: var(--color-accent); }
+
+  .segbar { display: flex; height: 30px; margin-bottom: var(--space-4); border-radius: var(--radius-sm); overflow: hidden; }
+  .segbar > span { display: block; }
+  .legend-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-2) var(--space-4); }
+  .legend-list li { display: flex; align-items: center; gap: var(--space-2); font-size: 12px; }
+  .legend-dot { width: 10px; height: 10px; flex: none; border-radius: 3px; }
+  .legend-label { flex: 1; color: var(--color-neutral-700); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .legend-count { font-weight: 700; }
+  .legend-share { color: var(--color-neutral-500); font-size: 11px; font-weight: 700; }
+
+  .form-stat-btn { display: flex; align-items: center; gap: var(--space-4); width: 100%; text-align: left; background: transparent; border: 0; border-radius: var(--radius-sm); border-top: 1px solid var(--color-neutral-200); padding: var(--space-3) var(--space-2); cursor: pointer; transition: background .15s ease; }
+  .form-stat-btn:first-child { border-top: 0; }
+  .form-stat-btn:hover { background: var(--color-accent-100); }
+  .form-stat-btn .num { font-family: var(--font-heading); font-weight: 700; font-size: 22px; line-height: 1; min-width: 44px; color: var(--color-text); }
+  .form-stat-btn .flabel { flex: 1; font-size: 13px; font-weight: 600; }
+  .form-stat-btn .arrow { color: var(--color-accent); font-weight: 800; font-size: 15px; }
+
+  .test-kpis { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+  .test-kpi { margin: 0; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-600); }
+  .test-kpi b { font-family: var(--font-heading); font-size: 16px; color: var(--color-text); letter-spacing: 0; font-weight: 700; }
+
+  .lang-bar-row { display: flex; align-items: center; gap: var(--space-3); font-size: 12px; border-top: 1px solid var(--color-neutral-200); padding-top: var(--space-3); margin-top: var(--space-3); }
+  .lang-bar-row .lbl { width: 80px; flex: none; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-700); }
+  .lang-bar-row .track { flex: 1; height: 8px; background: var(--color-neutral-200); display: block; border-radius: 999px; overflow: hidden; }
+  .lang-bar-row .fill { display: block; height: 100%; background: var(--color-accent); border-radius: 999px; }
+  .lang-bar-row .cnt { width: 26px; flex: none; text-align: right; font-weight: 700; }
+  .chart-wrap { width: 100%; overflow: hidden; }
+  .chart-wrap svg { display: block; }
+
+  /* ---------- Filters + tables (shared) ---------- */
+  .filters-bar { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; background: #fff; border: 1px solid var(--color-neutral-200); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-4); margin-bottom: var(--space-5); }
+  .filters-bar .input { flex: 1 1 200px; min-width: 190px; width: auto; }
+  .filters-bar select.input { flex: 0 0 auto; width: auto; }
+  .filters-bar label.date-field { display: flex; align-items: center; gap: var(--space-2); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700); white-space: nowrap; }
+  .filters-bar label.date-field input { width: auto; }
+  .filters-bar .count-label { margin-left: auto; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-600); white-space: nowrap; }
+
+  .table-wrap { background: #fff; border: 1px solid var(--color-neutral-200); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); overflow: hidden; overflow-x: auto; }
+  table.table { width: 100%; border-collapse: collapse; }
+  table.table th { text-align: left; padding: var(--space-3) var(--space-4); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap; border-bottom: 1.5px solid var(--color-neutral-200); background: var(--color-neutral-100); color: var(--color-neutral-700); }
+  table.table td { padding: var(--space-3) var(--space-4); font-size: 13px; vertical-align: top; border-bottom: 1px solid var(--color-neutral-200); }
+  table.table tr[data-row] { cursor: pointer; transition: background .12s ease; }
+  table.table tr[data-row]:hover td { background: var(--color-accent-100); }
+  .empty-note { padding: var(--space-8); text-align: center; font-size: 14px; color: var(--color-neutral-600); margin: 0; }
+
+  .status-chip { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; color: #fff; display: inline-block; }
+  .status-text { font-size: 13px; font-weight: 700; }
+  .count-chip { display: inline-block; min-width: 24px; text-align: center; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--color-neutral-200); color: var(--color-neutral-600); }
+  .count-chip.multi { background: var(--color-accent); color: #fff; }
+
+  /* ---------- Student detail ---------- */
+  .student-back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: var(--space-4); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-neutral-700); cursor: pointer; background: none; border: 0; padding: 0; transition: color .15s ease; }
+  .student-back:hover { color: var(--color-accent); }
+  .student-detail-header { background: #fff; border: 1px solid var(--color-neutral-200); border-top: 3px solid var(--color-accent); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-6); margin-bottom: var(--space-6); }
+  .student-detail-header h2 { font-weight: 700; font-size: 26px; line-height: 1; margin: 0 0 var(--space-6); text-transform: uppercase; }
+  .student-detail-header .rule { margin-bottom: var(--space-6); }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--space-4); }
+  .meta-item { display: flex; flex-direction: column; gap: var(--space-1); }
+  .meta-item .lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-neutral-600); }
+  .meta-item .val { font-size: 14px; word-break: break-word; }
+  .meta-item select.input { max-width: 190px; padding: 8px 10px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .repeat-note { background: var(--color-accent-100); border-left: 4px solid var(--color-accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13px; font-weight: 600; color: var(--color-accent-800); padding: var(--space-3); margin: var(--space-6) 0 0; }
+
+  .entry-group { background: #fff; border: 1px solid var(--color-neutral-200); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-6); margin-bottom: var(--space-6); }
+  .entry-group h3 { font-weight: 800; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 var(--space-4); color: var(--color-neutral-700); }
+  .entry-block { border-top: 1px solid var(--color-neutral-200); padding: var(--space-4) 0 0; margin-bottom: var(--space-4); }
+  .entry-block:first-child { border-top: 0; padding-top: 0; }
+  .entry-block:last-child { margin-bottom: 0; }
+  .entry-when { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600); margin: 0 0 var(--space-3); }
+  .entry-fields { display: grid; grid-template-columns: 170px 1fr; gap: var(--space-2) var(--space-4); margin: 0; }
+  .entry-fields dt { font-size: 12px; font-weight: 600; color: var(--color-neutral-600); margin: 0; }
+  .entry-fields dd { font-size: 13px; margin: 0; word-break: break-word; }
+
+  /* ---------- Share Tests ---------- */
+  .test-lang-group { margin-bottom: var(--space-6); }
+  .test-lang-heading { font-weight: 800; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-neutral-700); margin: 0 0 var(--space-4); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-neutral-200); }
+  .test-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: start; }
+  .test-card { background: #fff; border: 1px solid var(--color-neutral-200); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-6); }
+  .test-card h3 { font-weight: 700; font-size: 20px; line-height: 1.1; margin: 0 0 var(--space-2); text-transform: uppercase; }
+  .test-card .desc { font-size: 14px; line-height: 1.55; color: var(--color-neutral-700); margin: 0 0 var(--space-4); max-width: 620px; }
+  .test-card .link-input { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: var(--color-neutral-100); margin-bottom: var(--space-4); }
+  .test-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+  .share-panel { display: none; }
+  .share-panel.open { display: block; border-top: 1px solid var(--color-neutral-200); margin-top: var(--space-6); padding-top: var(--space-4); }
+  .share-panel textarea.input { min-height: 90px; resize: vertical; margin-bottom: var(--space-3); font-size: 14px; }
+
+  @media (max-width: 780px) {
+    .shell { flex-direction: column; }
+    .sidebar { width: 100%; flex-direction: row; align-items: center; padding: var(--space-3) var(--space-4); overflow-x: auto; }
+    .sidebar .brand { padding: 0 var(--space-4) 0 0; flex: none; }
+    .rule-v { display: none; }
+    .nav-list { flex-direction: row; flex: none; padding: 0; gap: 4px; }
+    .nav-item { white-space: nowrap; padding: 8px var(--space-3); }
+    .sidebar-actions { flex-direction: row; padding: 0 0 0 var(--space-4); margin-top: 0; }
+    .content { padding: var(--space-4); }
+    .topbar { padding: var(--space-4); }
+    #preview-banner { padding: var(--space-3) var(--space-4); }
+    #remote-banner { padding: var(--space-3) var(--space-4); }
+    .entry-fields { grid-template-columns: 1fr; }
+    .test-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <img src="../assets/vaniveda_logo_HD_transparent.png" alt="VaniVeda" style="height:30px;margin-bottom:var(--space-5)">
+    <h1 style="font-family:var(--font-heading);font-weight:700;font-size:28px;line-height:1;letter-spacing:0.01em;text-transform:uppercase;margin:0 0 var(--space-3)">Admin Console</h1>
+    <p style="font-size:14px;line-height:1.5;color:var(--color-neutral-700);margin:0 0 var(--space-6)">Enter the admin password to view submissions.</p>
+    <div class="rule" style="margin-bottom:var(--space-6)"></div>
+    <div id="login-preview-hint">Preview mode &mdash; this file was opened directly, not served by Apps Script. Any password works here; sample data only.</div>
+    <div id="login-remote-hint">Connected to your deployed script over a direct link, not through Apps Script's own page. This is real data from your Sheet &mdash; just reached a different way.</div>
+    <form id="login-form">
+      <div style="display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-4)">
+        <label style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-700)" for="vv-pw">Password</label>
+        <input class="input" id="vv-pw" type="password" autocomplete="current-password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="login-submit">Sign in</button>
+      <p id="login-error"></p>
+    </form>
+  </div>
+</div>
+
+<div class="shell" id="app" style="display:none">
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="../assets/vaniveda_logo_vector_white.svg" alt="">
+      <div class="brand-text">
+        <p class="eyebrow">VaniVeda</p>
+        <p class="title">Admin</p>
+      </div>
+    </div>
+    <div class="rule-v"></div>
+    <ul class="nav-list" id="nav-list"></ul>
+    <div class="rule-v"></div>
+    <div class="sidebar-actions">
+      <button class="btn btn-primary" id="refresh" type="button">Refresh</button>
+      <button class="btn btn-ghost" id="logout" type="button" style="color:#fff;border-color:rgba(255,255,255,0.4)">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="topbar-title">Overview</h1>
+      <p class="sub" id="topbar-sub"></p>
+    </div>
+    <div id="preview-banner"><strong>Preview mode</strong> &mdash; sample data. Status changes are local only. Deploy the project and open the real Web App URL to manage live submissions.</div>
+    <div id="remote-banner"><strong>Connected remotely</strong> &mdash; this is your real Sheet data, reached over a direct link instead of Apps Script's own page (see the guide if you want to know why that distinction exists).</div>
+
+    <div class="content">
+      <div id="error-banner"></div>
+      <div id="loading-note" style="display:none">Loading submissions&hellip;</div>
+
+      <div id="overview-view" style="display:none"></div>
+
+      <div id="students-view" style="display:none">
+        <div class="filters-bar" id="students-filters">
+          <input class="input" type="search" id="s-search" placeholder="Search name, email, phone&hellip;">
+          <select class="input" id="s-sort">
+            <option value="recent">Most recent activity</option>
+            <option value="most">Most submissions</option>
+            <option value="name">Name A&ndash;Z</option>
+          </select>
+          <span class="count-label" id="s-count"></span>
+        </div>
+        <div id="students-results"></div>
+      </div>
+
+      <div id="tests-view" style="display:none"></div>
+
+      <div id="syllabus-view" style="display:none"></div>
+
+      <div id="docs-view" style="display:none"></div>
+
+      <div id="data-view" style="display:none">
+        <div class="filters-bar" id="data-filters">
+          <input class="input" type="search" id="d-search" placeholder="Search name, phone, email&hellip;">
+          <select class="input" id="d-status"><option value="">All statuses</option></select>
+          <select class="input" id="d-sort">
+            <option value="desc">Newest first</option>
+            <option value="asc">Oldest first</option>
+          </select>
+          <label class="date-field">From <input class="input" type="date" id="d-from"></label>
+          <label class="date-field">To <input class="input" type="date" id="d-to"></label>
+          <button class="btn btn-ghost" id="d-clear" type="button">Clear</button>
+          <span class="count-label" id="d-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="table" id="data-table">
+            <thead id="data-thead"></thead>
+            <tbody id="data-tbody"></tbody>
+          </table>
+          <div class="empty-note" id="data-empty" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Only useful when this page is opened somewhere other than the deployed
+     Apps Script URL (a local server, ngrok, etc.) — see HAS_REMOTE_URL
+     below. Harmless if it 404s, which it will when Apps Script itself
+     serves this page instead, since there's no ../assets/ to resolve
+     there and google.script.run exists anyway at that point. -->
+<script src="../assets/config.js"></script>
+<script>
+  /* ====================== Config + constants ====================== */
+
+  // The site's public base URL — update this once the real domain is live.
+  var SITE_BASE_URL = 'https://www.vaniveda.com/';
+
+  var STATUS_COLORS = { 'New': '#D62839', 'Contacted': '#8C1420', 'Enrolled': '#2D2B2B', 'Not Interested': '#9B9797' };
+  function colorForStatus_(status) { return STATUS_COLORS[status] || '#605D5D'; }
+
+  var CEFR_ORDER = ['Pre-A1', 'A1', 'A2', 'B1', 'B2', 'C1'];
+  function orderLevels_(counts) {
+    var ordered = {};
+    CEFR_ORDER.forEach(function (lvl) { if (counts[lvl] !== undefined) ordered[lvl] = counts[lvl]; });
+    Object.keys(counts).forEach(function (lvl) { if (ordered[lvl] === undefined) ordered[lvl] = counts[lvl]; });
+    return ordered;
+  }
+
+  var SKIP_FIELDS = ['ID', 'Timestamp', 'Status', 'Name', 'Phone', 'Email'];
+
+  var SHARE_TESTS = [
+    {
+      name: 'Mixed-Format French Test',
+      language: 'French',
+      description: 'Multiple choice, matching, true/false and sentence-building. 20 questions, A1–B2.',
+      path: 'evaluation/french/zhhbtrml',
+      defaultMessage: 'Hi! Please take a few minutes to complete this French level test — it helps us tailor your coaching plan:'
+    },
+    {
+      name: 'Test de Niveau de Français',
+      language: 'French',
+      description: 'Fill-in-the-blank grammar test, entirely in French. 20 questions, A1–C1.',
+      path: 'evaluation/french/4say2f5t',
+      defaultMessage: 'Bonjour ! Merci de compléter ce test de niveau de français, cela nous aide à personnaliser votre parcours :'
+    },
+    {
+      name: 'Mixed-Format Spanish Test',
+      language: 'Spanish',
+      description: 'Multiple choice, matching, true/false and sentence-building. 20 questions, A1–B2.',
+      path: 'evaluation/spanish/wrtq8mpz',
+      defaultMessage: '¡Hola! Por favor, dedica unos minutos a completar este test de nivel de español — nos ayuda a adaptar tu plan de estudios:'
+    },
+    {
+      name: 'Test de Nivel de Español',
+      language: 'Spanish',
+      description: 'Fill-in-the-blank grammar test, entirely in Spanish. 20 questions, A1–C1.',
+      path: 'evaluation/spanish/b4ktnfxs',
+      defaultMessage: '¡Hola! Por favor, completa este test de nivel de español, nos ayuda a personalizar tu plan de estudios:'
+    }
+  ];
+
+  var SHARE_SYLLABUS = [
+    {
+      name: 'DELF A1 Syllabus',
+      level: 'A1 · Discovery',
+      description: 'Alphabet, everyday vocabulary, present tense, simple forms and postcards. 60 hours.',
+      path: 'assets/syllabus/view?level=A1',
+      defaultMessage: 'Hi! Here’s your DELF A1 syllabus — greetings, everyday vocabulary, present-tense basics and simple written tasks like postcards and forms. Have a look before we start:'
+    },
+    {
+      name: 'DELF A2 Syllabus',
+      level: 'A2 · Survivor',
+      description: 'Daily life, shopping, travel, past/future tenses, simple notes and messages. 80 hours.',
+      path: 'assets/syllabus/view?level=A2',
+      defaultMessage: 'Hi! Here’s your DELF A2 syllabus — daily routines, shopping and travel vocabulary, past and future tenses, and writing simple notes and messages. Take a look before your batch begins:'
+    },
+    {
+      name: 'DELF B1 Syllabus',
+      level: 'B1 · Threshold',
+      description: 'Hold a conversation, express opinions, describe experiences, handle the unexpected. 100 hours.',
+      path: 'assets/syllabus/view?level=B1',
+      defaultMessage: 'Bonjour ! Voici le syllabus DELF B1 — tenir une conversation, donner son opinion, raconter une expérience et gérer l’imprévu. À consulter avant votre prochain cours :'
+    },
+    {
+      name: 'DELF B2 Syllabus',
+      level: 'B2 · Vantage',
+      description: 'Argue a point of view, follow complex discussions, write structured essays. The level most PR applicants target. 120 hours.',
+      path: 'assets/syllabus/view?level=B2',
+      defaultMessage: 'Bonjour ! Voici le syllabus DELF B2 — argumenter un point de vue, suivre une discussion complexe et rédiger un texte structuré. À consulter avant votre prochain cours :'
+    }
+  ];
+
+  // Internal business document templates (letterhead, invoice, quotation,
+  // enrolment agreement) — not candidate-facing, so unlike SHARE_TESTS and
+  // SHARE_SYLLABUS there's no "share with a message" panel, just a direct
+  // download so whoever's using the admin page can grab the right file
+  // from any device. Add a new entry here (and drop the matching .docx
+  // into assets/vaniveda-docs-templates/) whenever a new template exists.
+  var SHARE_DOCS = [
+    {
+      name: 'Letterhead',
+      description: 'Blank branded letterhead — the base every other template starts from.',
+      path: 'assets/vaniveda-docs-templates/VaniVeda-Letterhead.docx'
+    },
+    {
+      name: 'Invoice Template',
+      description: 'Branded invoice layout for billing candidates or partners.',
+      path: 'assets/vaniveda-docs-templates/VaniVeda-Invoice-Template.docx'
+    },
+    {
+      name: 'Quotation Template',
+      description: 'Branded quotation layout for prospective candidates and partners.',
+      path: 'assets/vaniveda-docs-templates/VaniVeda-Quotation-Template.docx'
+    },
+    {
+      name: 'Enrolment Agreement Template',
+      description: 'The agreement a candidate signs on enrolling into a batch.',
+      path: 'assets/vaniveda-docs-templates/VaniVeda-Enrolment-Agreement-Template.docx'
+    }
+  ];
+
+  /* ====================== State ====================== */
+
+  var DATA = null;
+  var STATUS_OPTIONS = ['New', 'Contacted', 'Enrolled', 'Not Interested'];
+  var STUDENT_STATUSES = {};
+  var currentTab = null;
+  var selectedStudentEmail = null;
+  var filters = { search: '', status: '', dateFrom: '', dateTo: '', sortDir: 'desc' };
+  var studentFilters = { search: '', sort: 'recent' };
+  var openTestIndex = null;
+  var openSyllabusIndex = null;
+  var ADMIN_PASSWORD = null;
+
+  // Three ways this page can end up loaded, in order of preference:
+  //   1. HAS_GAS_BRIDGE — served by Apps Script itself (the deployed
+  //      .../exec URL). google.script.run exists; use it, full stop.
+  //   2. HAS_REMOTE_URL — served from anywhere else (a local server,
+  //      ngrok, plain file://...) but assets/config.js (loaded above)
+  //      knows the deployed script's URL. Real data, reached over a
+  //      plain HTTP POST instead — see callBackend_ below.
+  //   3. IS_PREVIEW — neither of the above: no real backend reachable at
+  //      all, so the dashboard runs on canned sample data instead.
+  var HAS_GAS_BRIDGE = typeof google !== 'undefined' && !!google.script && !!google.script.run;
+  var HAS_REMOTE_URL = !HAS_GAS_BRIDGE && typeof window.VV_APPS_SCRIPT_URL === 'string' && window.VV_APPS_SCRIPT_URL.length > 0;
+  var IS_PREVIEW = !HAS_GAS_BRIDGE && !HAS_REMOTE_URL;
+
+  /* ====================== Mock data (preview mode) ====================== */
+
+  function offset_(iso, ms) { return new Date(new Date(iso).getTime() + ms).toISOString(); }
+
+  function mockData_() {
+    var now = '2026-08-22T10:15:00.000Z';
+    var hour = 60 * 60 * 1000;
+    return {
+      statusOptions: STATUS_OPTIONS,
+      studentStatuses: {
+        'ravi@example.com': 'Contacted', 'priya@example.com': 'Contacted', 'claire@example.com': 'Enrolled',
+        'etudiant@example.com': 'New', 'asha@example.com': 'New', 'iqbal@example.com': 'New',
+        'wrong@example.com': 'New', 'sample@example.com': 'Not Interested', 'apprenant@example.com': 'New',
+        'estudiante@example.com': 'New', 'sofia@example.com': 'Contacted'
+      },
+      sheets: {
+        contact: {
+          name: 'Contact Enrolments',
+          headers: ['ID', 'Timestamp', 'Status', 'Name', 'Phone', 'Email', 'City', 'Course', 'Preferred Batch', 'Goal & Deadline'],
+          rows: [
+            ['c1', now, 'New', 'Ravi Kumar', '+91 9876543210', 'ravi@example.com', 'Pune, IST', 'TCF Canada', 'Evening', 'Targeting CLB 7 by January for Express Entry.'],
+            ['c2', offset_(now, -3 * hour), 'Contacted', 'Priya Nair', '+91 9812345678', 'priya@example.com', 'Bengaluru, IST', 'DELF B2', 'Weekend', 'Wants to study in France next fall.'],
+            ['c3', offset_(now, -26 * hour), 'Enrolled', 'Claire Dubois', '+33 612345678', 'claire@example.com', 'Paris, CET', 'TEF Canada', 'Early morning', 'Already has A2 — needs B2 fast.'],
+            ['c4', offset_(now, -50 * hour), 'New', 'Fatou Diallo', '+221 771234567', 'etudiant@example.com', 'Dakar, GMT', 'TCF Canada', 'Evening', 'Wants a batch that fits GMT hours.'],
+            ['c5', offset_(now, -70 * hour), 'Contacted', 'Ravi Kumar', '+91 9876543210', 'ravi@example.com', 'Pune, IST', 'DELF B1', 'Weekend', 'Following up after the demo — asking about fees.']
+          ]
+        },
+        quiz: {
+          name: 'Course Quiz Leads',
+          headers: ['ID', 'Timestamp', 'Status', 'Name', 'Phone', 'Email', 'Goal', 'Deadline', 'Placement Checks', 'Recommended Exam', 'Suggested Level', 'Estimated Points'],
+          rows: [
+            ['q1', offset_(now, -1 * hour), 'New', 'Asha Rao', '+91 9876500000', 'asha@example.com', 'canada', 'under3', '[true,true,true,false,false]', 'TCF Canada', 'B1', '68'],
+            ['q2', offset_(now, -8 * hour), 'New', 'Mohammed Iqbal', '+91 9900112233', 'iqbal@example.com', 'france', 'open', '[true,true,false,false,false]', 'DELF B1 → B2', 'A2', '36'],
+            ['q3', offset_(now, -4 * hour), 'New', 'Priya Nair', '+91 9812345678', 'priya@example.com', 'france', 'under3', '[true,false,true,false,false]', 'DELF B2', 'B1', '54']
+          ]
+        },
+        test: {
+          name: 'Test Results',
+          headers: ['ID', 'Timestamp', 'Status', 'Test ID', 'Language', 'Name', 'Phone', 'Email', 'Score', 'Total', 'Level'],
+          rows: [
+            ['f1', offset_(now, -5 * hour), 'New', 'french-zhhbtrml', 'French', 'Test Wrong', '+91 9000000001', 'wrong@example.com', '0', '20', 'Pre-A1'],
+            ['f2', offset_(now, -30 * hour), 'Not Interested', 'french-zhhbtrml', 'French', 'Sample Student', '+91 9000000002', 'sample@example.com', '14', '20', 'B1'],
+            ['n1', offset_(now, -2 * hour), 'New', 'french-4say2f5t', 'French', 'Fatou Diallo', '+221 771234567', 'etudiant@example.com', '16', '20', 'B2'],
+            ['n2', offset_(now, -14 * hour), 'New', 'french-4say2f5t', 'French', 'Karim Haddad', '+971 501234567', 'apprenant@example.com', '9', '20', 'A2'],
+            ['s1', offset_(now, -6 * hour), 'New', 'spanish-wrtq8mpz', 'Spanish', 'Sofía Ramírez', '+34 611223344', 'sofia@example.com', '17', '20', 'B2'],
+            ['s2', offset_(now, -18 * hour), 'New', 'spanish-b4ktnfxs', 'Spanish', 'Estudiante Ejemplo', '+52 5512345678', 'estudiante@example.com', '10', '20', 'A2']
+          ]
+        }
+      }
+    };
+  }
+
+  /* ====================== Backend transport ====================== */
+
+  // Only used when HAS_REMOTE_URL — calls the deployed Apps Script the
+  // same way the site's own public forms do (see vvSubmitToSheet in
+  // assets/main.js): a plain POST with Content-Type: text/plain, since
+  // Apps Script Web Apps don't handle the CORS preflight a real
+  // application/json request triggers. onSuccess/onFailure match the
+  // shape google.script.run's own withSuccessHandler/withFailureHandler
+  // callbacks get, so every call site can treat both transports the same.
+  function callBackend_(action, payload, onSuccess, onFailure) {
+    var body = Object.assign({ action: action }, payload);
+    fetch(window.VV_APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body)
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (json) {
+        // adminLogin already returns {ok, error?} itself without ever
+        // throwing server-side, so it's handed to onSuccess as-is; the
+        // other two actions throw on failure, so handleAdminAction_ (in
+        // Code.gs) wraps them as {ok:true, result} / {ok:false, error}
+        // instead — unwrap that envelope here.
+        if (action === 'adminLogin') { onSuccess(json); return; }
+        if (json && json.ok === false) { onFailure(new Error(json.error || 'Request failed.')); return; }
+        onSuccess(json.result);
+      })
+      .catch(onFailure);
+  }
+
+  /* ====================== Load / auth ====================== */
+
+  function load() {
+    document.getElementById('loading-note').style.display = 'block';
+    document.getElementById('overview-view').style.display = 'none';
+    document.getElementById('students-view').style.display = 'none';
+    document.getElementById('tests-view').style.display = 'none';
+    document.getElementById('syllabus-view').style.display = 'none';
+    document.getElementById('data-view').style.display = 'none';
+    document.getElementById('error-banner').style.display = 'none';
+    document.getElementById('preview-banner').style.display = IS_PREVIEW ? 'block' : 'none';
+    document.getElementById('remote-banner').style.display = HAS_REMOTE_URL ? 'block' : 'none';
+
+    if (IS_PREVIEW) {
+      setTimeout(function () { onData(mockData_()); }, 150);
+      return;
+    }
+    if (HAS_REMOTE_URL) {
+      callBackend_('getAllSubmissions', { password: ADMIN_PASSWORD }, onData, onLoadError_);
+      return;
+    }
+    google.script.run.withSuccessHandler(onData).withFailureHandler(onLoadError_).getAllSubmissions(ADMIN_PASSWORD);
+  }
+
+  function onLoadError_(err) {
+    document.getElementById('loading-note').style.display = 'none';
+    var e = document.getElementById('error-banner');
+    e.textContent = 'Could not load submissions: ' + (err && err.message ? err.message : err);
+    e.style.display = 'block';
+  }
+
+  function onData(data) {
+    DATA = data.sheets;
+    STATUS_OPTIONS = data.statusOptions || ['New', 'Contacted', 'Enrolled', 'Not Interested'];
+    STUDENT_STATUSES = data.studentStatuses || {};
+    var isSpecialTab = currentTab === 'overview' || currentTab === 'tests' || currentTab === 'students' || currentTab === 'syllabus' || currentTab === 'docs';
+    if (!currentTab || (!isSpecialTab && !DATA[currentTab])) currentTab = 'overview';
+    populateStatusFilter_();
+    renderNav_();
+    renderContent_();
+    document.getElementById('loading-note').style.display = 'none';
+  }
+
+  function showApp_() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    load();
+  }
+
+  function showLoginError_(msg) {
+    document.getElementById('login-error').textContent = msg;
+    document.getElementById('login-submit').disabled = false;
+  }
+
+  function attemptLogin_(password, opts) {
+    opts = opts || {};
+    if (IS_PREVIEW) {
+      if (!password) { if (!opts.silent) showLoginError_('Enter a password.'); return; }
+      ADMIN_PASSWORD = password;
+      try { sessionStorage.setItem('vv_admin_pw', password); } catch (e) {}
+      showApp_();
+      return;
+    }
+
+    function onLoginResult(res) {
+      if (res && res.ok) {
+        ADMIN_PASSWORD = password;
+        try { sessionStorage.setItem('vv_admin_pw', password); } catch (e) {}
+        showApp_();
+      } else if (!opts.silent) {
+        showLoginError_((res && res.error) || 'Incorrect password.');
+      }
+    }
+    function onLoginFailure(err) {
+      if (!opts.silent) showLoginError_(err && err.message ? err.message : String(err));
+    }
+
+    if (HAS_REMOTE_URL) {
+      callBackend_('adminLogin', { password: password }, onLoginResult, onLoginFailure);
+      return;
+    }
+    google.script.run.withSuccessHandler(onLoginResult).withFailureHandler(onLoginFailure).adminLogin(password);
+  }
+
+  function logout_() {
+    ADMIN_PASSWORD = null;
+    try { sessionStorage.removeItem('vv_admin_pw'); } catch (e) {}
+    document.getElementById('vv-pw').value = '';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+  }
+
+  /* ====================== Navigation ====================== */
+
+  // Decorative — the visible label span already names each destination,
+  // so every icon here is aria-hidden and purely a scan aid.
+  var NAV_ICONS_ = {
+    overview: '<rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/>',
+    students: '<circle cx="8" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.5-6.5 5.5-6.5s5.5 2.9 5.5 6.5"/><circle cx="17" cy="8.5" r="2.6"/><path d="M15.5 13.2c2.7.4 4.9 3 4.9 6.3"/>',
+    tests: '<circle cx="18" cy="5" r="2.2"/><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="19" r="2.2"/><path d="M8 10.8L16 6.2M8 13.2l8 4.6"/>',
+    contact: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+    quiz: '<circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 1 1 4.2 2.7c-.9.5-1.3 1-1.3 2.1"/><circle cx="12" cy="17.3" r="0.9" fill="currentColor" stroke="none"/>',
+    test: '<rect x="5" y="4" width="14" height="17" rx="1.5"/><path d="M9 3.5h6v2.5H9z"/><path d="M9 13l2 2 4-4.5"/>',
+    syllabus: '<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 19V4.5"/><path d="M9 7h7M9 10.5h7"/>',
+    docs: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 13v4M9.5 17l-1.8-1.8M9.5 17l1.8-1.8"/>',
+    __default: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/>'
+  };
+
+  function renderNav_() {
+    var nav = document.getElementById('nav-list');
+    nav.innerHTML = '';
+
+    function addItem(key, label, count) {
+      var li = document.createElement('li');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'nav-item' + (currentTab === key ? ' active' : '');
+      btn.insertAdjacentHTML('afterbegin',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        + (NAV_ICONS_[key] || NAV_ICONS_.__default) + '</svg>');
+      var span = document.createElement('span');
+      span.textContent = label;
+      btn.appendChild(span);
+      if (count !== undefined) {
+        var c = document.createElement('span');
+        c.className = 'nav-count';
+        c.textContent = count;
+        btn.appendChild(c);
+      }
+      btn.onclick = function () {
+        if (key === 'students') selectedStudentEmail = null;
+        switchTab_(key);
+      };
+      li.appendChild(btn);
+      nav.appendChild(li);
+    }
+
+    addItem('overview', 'Overview');
+    addItem('students', 'Students', Object.keys(computeStudents_()).length);
+    addItem('tests', 'Share Tests');
+    addItem('syllabus', 'Syllabus', SHARE_SYLLABUS.length);
+    addItem('docs', 'Docs Templates', SHARE_DOCS.length);
+    Object.keys(DATA).forEach(function (key) { addItem(key, DATA[key].name, DATA[key].rows.length); });
+  }
+
+  function switchTab_(key) {
+    currentTab = key;
+    renderNav_();
+    renderContent_();
+  }
+
+  function renderContent_() {
+    var isOverview = currentTab === 'overview';
+    var isTests = currentTab === 'tests';
+    var isSyllabus = currentTab === 'syllabus';
+    var isDocs = currentTab === 'docs';
+    var isStudents = currentTab === 'students';
+    document.getElementById('overview-view').style.display = isOverview ? 'block' : 'none';
+    document.getElementById('students-view').style.display = isStudents ? 'block' : 'none';
+    document.getElementById('tests-view').style.display = isTests ? 'block' : 'none';
+    document.getElementById('syllabus-view').style.display = isSyllabus ? 'block' : 'none';
+    document.getElementById('docs-view').style.display = isDocs ? 'block' : 'none';
+    document.getElementById('data-view').style.display = (isOverview || isTests || isSyllabus || isDocs || isStudents) ? 'none' : 'block';
+
+    var byEmail = computeStudents_();
+    var studentTotal = Object.keys(byEmail).length;
+    var formTotal = Object.keys(DATA).length;
+    document.getElementById('topbar-title').textContent =
+      isOverview ? 'Overview' : isStudents ? 'Students' : isTests ? 'Share Tests' : isSyllabus ? 'Syllabus' : isDocs ? 'Docs Templates' : DATA[currentTab].name;
+    document.getElementById('topbar-sub').textContent = studentTotal + ' students · ' + formTotal + ' forms';
+
+    if (isOverview) renderOverview_();
+    else if (isStudents) renderStudentsView_();
+    else if (isTests) renderTests_();
+    else if (isSyllabus) renderSyllabus_();
+    else if (isDocs) renderDocsTemplates_();
+    else renderDataTable_();
+  }
+
+  /* ====================== Students: cross-sheet identity ====================== */
+
+  function findCol_(headers, name) { return headers.indexOf(name); }
+
+  function computeStudents_() {
+    var byEmail = {};
+    Object.keys(DATA).forEach(function (key) {
+      var sheet = DATA[key];
+      var nameIdx = findCol_(sheet.headers, 'Name');
+      var emailIdx = findCol_(sheet.headers, 'Email');
+      var phoneIdx = findCol_(sheet.headers, 'Phone');
+      if (emailIdx === -1) return;
+
+      sheet.rows.forEach(function (row) {
+        var emailRaw = row[emailIdx];
+        var emailKey = String(emailRaw || '').trim().toLowerCase();
+        if (!emailKey) return;
+
+        if (!byEmail[emailKey]) {
+          byEmail[emailKey] = {
+            email: emailRaw, name: '', phone: '', lastTs: null, entries: [],
+            status: STUDENT_STATUSES[emailKey] || 'New'
+          };
+        }
+        var student = byEmail[emailKey];
+        var ts = new Date(row[1]);
+        var name = nameIdx > -1 ? row[nameIdx] : '';
+        var phone = phoneIdx > -1 ? row[phoneIdx] : '';
+        if (!student.lastTs || ts > student.lastTs) {
+          if (name) student.name = name;
+          if (phone) student.phone = phone;
+          student.lastTs = ts;
+        } else {
+          if (name && !student.name) student.name = name;
+          if (phone && !student.phone) student.phone = phone;
+        }
+        student.entries.push({ key: key, sheetName: sheet.name, headers: sheet.headers, row: row });
+      });
+    });
+    return byEmail;
+  }
+
+  function groupEntriesByKey_(entries) {
+    var byKey = {};
+    entries.forEach(function (e) {
+      if (!byKey[e.key]) byKey[e.key] = [];
+      byKey[e.key].push(e);
+    });
+    return byKey;
+  }
+
+  function timeAgo_(iso) {
+    var d = new Date(iso);
+    var diffMs = Date.now() - d.getTime();
+    var mins = Math.floor(diffMs / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return mins + 'm ago';
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h ago';
+    var days = Math.floor(hrs / 24);
+    if (days < 7) return days + 'd ago';
+    return d.toLocaleDateString();
+  }
+
+  /* ====================== Charts (plain SVG, no library) ====================== */
+
+  function columnChart_(counts, colorFn) {
+    var keys = Object.keys(counts);
+    var max = Math.max.apply(null, keys.map(function (k) { return counts[k]; }).concat([1]));
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var barWidth = 34, gap = 22, height = 140;
+    var width = keys.length * (barWidth + gap) + gap;
+    var svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', height + 34);
+    svg.setAttribute('viewBox', '0 0 ' + width + ' ' + (height + 34));
+    svg.setAttribute('preserveAspectRatio', 'xMinYMid meet');
+
+    keys.forEach(function (k, i) {
+      var value = counts[k];
+      var barHeight = max ? (value / max) * height : 0;
+      var x = gap + i * (barWidth + gap);
+      var y = height - barHeight;
+
+      var rect = document.createElementNS(svgNS, 'rect');
+      rect.setAttribute('x', x); rect.setAttribute('y', y);
+      rect.setAttribute('width', barWidth); rect.setAttribute('height', Math.max(barHeight, 1));
+      rect.setAttribute('fill', colorFn ? colorFn(k) : '#D62839');
+      svg.appendChild(rect);
+
+      var valText = document.createElementNS(svgNS, 'text');
+      valText.setAttribute('x', x + barWidth / 2); valText.setAttribute('y', Math.max(y - 6, 12));
+      valText.setAttribute('text-anchor', 'middle'); valText.setAttribute('font-family', 'Archivo, sans-serif');
+      valText.setAttribute('font-size', '13'); valText.setAttribute('font-weight', '800'); valText.setAttribute('fill', '#201E1D');
+      valText.textContent = value;
+      svg.appendChild(valText);
+
+      var labelText = document.createElementNS(svgNS, 'text');
+      labelText.setAttribute('x', x + barWidth / 2); labelText.setAttribute('y', height + 20);
+      labelText.setAttribute('text-anchor', 'middle'); labelText.setAttribute('font-family', 'Archivo, sans-serif');
+      labelText.setAttribute('font-size', '11'); labelText.setAttribute('font-weight', '700'); labelText.setAttribute('letter-spacing', '0.06em');
+      labelText.setAttribute('fill', '#605D5D');
+      labelText.textContent = k;
+      svg.appendChild(labelText);
+    });
+
+    var axis = document.createElementNS(svgNS, 'line');
+    axis.setAttribute('x1', 0); axis.setAttribute('y1', height + 0.5);
+    axis.setAttribute('x2', width); axis.setAttribute('y2', height + 0.5);
+    axis.setAttribute('stroke', '#201E1D'); axis.setAttribute('stroke-width', 2);
+    svg.appendChild(axis);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'chart-wrap';
+    wrap.appendChild(svg);
+    return wrap;
+  }
+
+  /** A 7-day area+line trend of total submissions across all forms. */
+  function trendChart_(days) {
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var W = 560, H = 158, padT = 28, padB = 26, padX = 18;
+    var plot = H - padT - padB;
+    var max = Math.max.apply(null, days.map(function (d) { return d.count; }).concat([1]));
+    var n = days.length, step = n > 1 ? (W - padX * 2) / (n - 1) : 0;
+
+    var svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', H);
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('preserveAspectRatio', 'xMinYMid meet');
+
+    var pts = days.map(function (d, i) { return { x: padX + i * step, y: padT + plot - (d.count / max) * plot, d: d }; });
+
+    var mid = document.createElementNS(svgNS, 'line');
+    mid.setAttribute('x1', 0); mid.setAttribute('y1', padT + plot / 2);
+    mid.setAttribute('x2', W); mid.setAttribute('y2', padT + plot / 2);
+    mid.setAttribute('stroke', '#D7D3D3'); mid.setAttribute('stroke-width', 1); mid.setAttribute('stroke-dasharray', '3 4');
+    svg.appendChild(mid);
+
+    var areaD = 'M' + padX + ',' + (padT + plot) + ' ' +
+      pts.map(function (p) { return 'L' + p.x + ',' + p.y; }).join(' ') +
+      ' L' + (W - padX) + ',' + (padT + plot) + ' Z';
+    var area = document.createElementNS(svgNS, 'path');
+    area.setAttribute('d', areaD); area.setAttribute('fill', '#FBE1E3');
+    svg.appendChild(area);
+
+    var line = document.createElementNS(svgNS, 'polyline');
+    line.setAttribute('points', pts.map(function (p) { return p.x + ',' + p.y; }).join(' '));
+    line.setAttribute('fill', 'none'); line.setAttribute('stroke', '#D62839'); line.setAttribute('stroke-width', 2.5);
+    svg.appendChild(line);
+
+    pts.forEach(function (p) {
+      var dot = document.createElementNS(svgNS, 'rect');
+      dot.setAttribute('x', p.x - 3.5); dot.setAttribute('y', p.y - 3.5);
+      dot.setAttribute('width', 7); dot.setAttribute('height', 7); dot.setAttribute('fill', '#201E1D');
+      svg.appendChild(dot);
+
+      if (p.d.count) {
+        var vt = document.createElementNS(svgNS, 'text');
+        vt.setAttribute('x', p.x); vt.setAttribute('y', p.y - 10);
+        vt.setAttribute('text-anchor', 'middle'); vt.setAttribute('font-family', 'Archivo, sans-serif');
+        vt.setAttribute('font-size', '12'); vt.setAttribute('font-weight', '800'); vt.setAttribute('fill', '#201E1D');
+        vt.textContent = String(p.d.count);
+        svg.appendChild(vt);
+      }
+
+      var lt = document.createElementNS(svgNS, 'text');
+      lt.setAttribute('x', p.x); lt.setAttribute('y', H - 7);
+      lt.setAttribute('text-anchor', 'middle'); lt.setAttribute('font-family', 'Archivo, sans-serif');
+      lt.setAttribute('font-size', '10'); lt.setAttribute('font-weight', '700'); lt.setAttribute('letter-spacing', '0.1em'); lt.setAttribute('fill', '#605D5D');
+      lt.textContent = p.d.label;
+      svg.appendChild(lt);
+    });
+
+    var axis = document.createElementNS(svgNS, 'line');
+    axis.setAttribute('x1', 0); axis.setAttribute('y1', padT + plot);
+    axis.setAttribute('x2', W); axis.setAttribute('y2', padT + plot);
+    axis.setAttribute('stroke', '#201E1D'); axis.setAttribute('stroke-width', 2);
+    svg.appendChild(axis);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'chart-wrap';
+    wrap.appendChild(svg);
+    return wrap;
+  }
+
+  /* ====================== Overview ====================== */
+
+  function computeOverviewStats_() {
+    var byEmail = computeStudents_();
+    var students = Object.keys(byEmail).map(function (k) { return byEmail[k]; });
+
+    var statusCounts = {};
+    STATUS_OPTIONS.forEach(function (s) { statusCounts[s] = 0; });
+    students.forEach(function (s) {
+      if (statusCounts[s.status] === undefined) statusCounts[s.status] = 0;
+      statusCounts[s.status]++;
+    });
+
+    var repeatCount = students.filter(function (s) { return s.entries.length > 1; }).length;
+
+    var studentsByForm = {};
+    Object.keys(DATA).forEach(function (key) { studentsByForm[key] = 0; });
+    students.forEach(function (s) {
+      var seenForms = {};
+      s.entries.forEach(function (e) { seenForms[e.key] = true; });
+      Object.keys(seenForms).forEach(function (key) { studentsByForm[key] = (studentsByForm[key] || 0) + 1; });
+    });
+
+    var allTimestamps = [];
+    Object.keys(DATA).forEach(function (key) {
+      DATA[key].rows.forEach(function (row) { allTimestamps.push(new Date(row[1])); });
+    });
+    var anchor = allTimestamps.length ? new Date(Math.max.apply(null, allTimestamps)) : new Date();
+    anchor.setHours(23, 59, 59, 999);
+    var days = [];
+    for (var i = 6; i >= 0; i--) {
+      var end = new Date(anchor.getTime() - i * 86400000);
+      var start = new Date(end);
+      start.setHours(0, 0, 0, 0);
+      var count = allTimestamps.filter(function (t) { return t >= start && t <= end; }).length;
+      days.push({ label: start.toLocaleDateString(undefined, { weekday: 'short' }).toUpperCase(), count: count });
+    }
+
+    var testStats = { completions: 0, avgScorePct: null, levelCounts: {}, languageCounts: {} };
+    var testSheet = DATA['test'];
+    if (testSheet) {
+      var scoreIdx = findCol_(testSheet.headers, 'Score');
+      var totalIdx = findCol_(testSheet.headers, 'Total');
+      var levelIdx = findCol_(testSheet.headers, 'Level');
+      var langIdx = findCol_(testSheet.headers, 'Language');
+      var pctSum = 0, pctCount = 0;
+      testSheet.rows.forEach(function (row) {
+        testStats.completions++;
+        if (scoreIdx > -1 && totalIdx > -1) {
+          var score = Number(row[scoreIdx]), total = Number(row[totalIdx]);
+          if (total > 0) { pctSum += (score / total) * 100; pctCount++; }
+        }
+        if (levelIdx > -1) testStats.levelCounts[row[levelIdx]] = (testStats.levelCounts[row[levelIdx]] || 0) + 1;
+        if (langIdx > -1) testStats.languageCounts[row[langIdx]] = (testStats.languageCounts[row[langIdx]] || 0) + 1;
+      });
+      testStats.avgScorePct = pctCount ? Math.round(pctSum / pctCount) : null;
+    }
+
+    return {
+      total: students.length, statusCounts: statusCounts, repeatCount: repeatCount,
+      studentsByForm: studentsByForm, days: days, testStats: testStats
+    };
+  }
+
+  function renderOverview_() {
+    var stats = computeOverviewStats_();
+    var el = document.getElementById('overview-view');
+    el.innerHTML = '';
+
+    var grid = document.createElement('div');
+    grid.className = 'stat-grid';
+    [
+      { label: 'Total students', num: stats.total, color: 'var(--color-accent)' },
+      { label: 'New leads', num: stats.statusCounts['New'] || 0 },
+      { label: 'Contacted', num: stats.statusCounts['Contacted'] || 0 },
+      { label: 'Enrolled', num: stats.statusCounts['Enrolled'] || 0 },
+      { label: 'Repeat students', num: stats.repeatCount }
+    ].forEach(function (c) {
+      var card = document.createElement('div');
+      card.className = 'stat-card';
+      var num = document.createElement('p'); num.className = 'num'; num.textContent = c.num;
+      if (c.color) num.style.color = c.color;
+      var label = document.createElement('p'); label.className = 'label'; label.textContent = c.label;
+      card.appendChild(num); card.appendChild(label);
+      grid.appendChild(card);
+    });
+    el.appendChild(grid);
+
+    var row1 = document.createElement('div');
+    row1.className = 'grid-2';
+
+    var trendPanel = document.createElement('section');
+    trendPanel.className = 'panel';
+    var trendHead = document.createElement('div');
+    trendHead.className = 'panel-head';
+    var trendH2 = document.createElement('h2'); trendH2.textContent = 'Submissions, last 7 days';
+    var trendTotal = document.createElement('p'); trendTotal.className = 'big';
+    trendTotal.textContent = stats.days.reduce(function (a, d) { return a + d.count; }, 0);
+    trendHead.appendChild(trendH2); trendHead.appendChild(trendTotal);
+    trendPanel.appendChild(trendHead);
+    trendPanel.appendChild(trendChart_(stats.days));
+    row1.appendChild(trendPanel);
+
+    var statusPanel = document.createElement('section');
+    statusPanel.className = 'panel';
+    var statusH2 = document.createElement('h2'); statusH2.textContent = 'Student status';
+    statusPanel.appendChild(statusH2);
+
+    var totalStudents = stats.total || 1;
+    var segbar = document.createElement('div');
+    segbar.className = 'segbar';
+    Object.keys(stats.statusCounts).filter(function (k) { return stats.statusCounts[k] > 0; }).forEach(function (k) {
+      var seg = document.createElement('span');
+      seg.style.width = (stats.statusCounts[k] / totalStudents * 100) + '%';
+      seg.style.background = colorForStatus_(k);
+      segbar.appendChild(seg);
+    });
+    statusPanel.appendChild(segbar);
+
+    var legend = document.createElement('ul');
+    legend.className = 'legend-list';
+    Object.keys(stats.statusCounts).forEach(function (k) {
+      var li = document.createElement('li');
+      var dot = document.createElement('span'); dot.className = 'legend-dot'; dot.style.background = colorForStatus_(k);
+      var label = document.createElement('span'); label.className = 'legend-label'; label.textContent = k;
+      var count = document.createElement('span'); count.className = 'legend-count'; count.textContent = stats.statusCounts[k];
+      var share = document.createElement('span'); share.className = 'legend-share';
+      share.textContent = Math.round(stats.statusCounts[k] / totalStudents * 100) + '%';
+      li.appendChild(dot); li.appendChild(label); li.appendChild(count); li.appendChild(share);
+      legend.appendChild(li);
+    });
+    statusPanel.appendChild(legend);
+    row1.appendChild(statusPanel);
+    el.appendChild(row1);
+
+    var row2 = document.createElement('div');
+    row2.className = 'grid-2';
+
+    var formPanel = document.createElement('section');
+    formPanel.className = 'panel';
+    var formH2 = document.createElement('h2'); formH2.textContent = 'Students by form';
+    formPanel.appendChild(formH2);
+    Object.keys(stats.studentsByForm).forEach(function (key) {
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'form-stat-btn';
+      var num = document.createElement('span'); num.className = 'num'; num.textContent = stats.studentsByForm[key];
+      var label = document.createElement('span'); label.className = 'flabel'; label.textContent = DATA[key].name;
+      var arrow = document.createElement('span'); arrow.className = 'arrow'; arrow.textContent = '→';
+      btn.appendChild(num); btn.appendChild(label); btn.appendChild(arrow);
+      btn.onclick = function () { switchTab_(key); };
+      formPanel.appendChild(btn);
+    });
+    row2.appendChild(formPanel);
+
+    if (stats.testStats.completions) {
+      var testPanel = document.createElement('section');
+      testPanel.className = 'panel';
+      var testHead = document.createElement('div');
+      testHead.className = 'panel-head';
+      var testH2 = document.createElement('h2'); testH2.textContent = 'Test levels';
+      testHead.appendChild(testH2);
+      var kpis = document.createElement('div'); kpis.className = 'test-kpis';
+      [
+        { label: 'Completions', num: stats.testStats.completions },
+        { label: 'Avg. score', num: stats.testStats.avgScorePct != null ? stats.testStats.avgScorePct + '%' : '—' }
+      ].forEach(function (k) {
+        var p = document.createElement('p'); p.className = 'test-kpi';
+        p.appendChild(document.createTextNode(k.label + ' '));
+        var b = document.createElement('b'); b.textContent = k.num;
+        p.appendChild(b);
+        kpis.appendChild(p);
+      });
+      testHead.appendChild(kpis);
+      testPanel.appendChild(testHead);
+
+      if (Object.keys(stats.testStats.levelCounts).length) {
+        testPanel.appendChild(columnChart_(orderLevels_(stats.testStats.levelCounts), colorForStatus_.bind ? function (k) { return '#D62839'; } : null));
+      }
+
+      var maxLang = Math.max.apply(null, Object.keys(stats.testStats.languageCounts).map(function (k) { return stats.testStats.languageCounts[k]; }).concat([1]));
+      Object.keys(stats.testStats.languageCounts).forEach(function (k) {
+        var row = document.createElement('div'); row.className = 'lang-bar-row';
+        var lbl = document.createElement('span'); lbl.className = 'lbl'; lbl.textContent = k;
+        var track = document.createElement('span'); track.className = 'track';
+        var fill = document.createElement('span'); fill.className = 'fill';
+        fill.style.width = (stats.testStats.languageCounts[k] / maxLang * 100) + '%';
+        track.appendChild(fill);
+        var cnt = document.createElement('span'); cnt.className = 'cnt'; cnt.textContent = stats.testStats.languageCounts[k];
+        row.appendChild(lbl); row.appendChild(track); row.appendChild(cnt);
+        testPanel.appendChild(row);
+      });
+
+      row2.appendChild(testPanel);
+    }
+    el.appendChild(row2);
+  }
+
+  /* ====================== Students tab ====================== */
+
+  function initStudentsFilters_() {
+    document.getElementById('s-search').addEventListener('input', function (e) {
+      studentFilters.search = e.target.value.trim().toLowerCase();
+      renderStudentsList_();
+    });
+    document.getElementById('s-sort').addEventListener('change', function (e) {
+      studentFilters.sort = e.target.value;
+      renderStudentsList_();
+    });
+  }
+
+  function renderStudentsView_() {
+    var byEmail = computeStudents_();
+    var filtersBar = document.getElementById('students-filters');
+    var results = document.getElementById('students-results');
+
+    if (selectedStudentEmail && byEmail[selectedStudentEmail]) {
+      filtersBar.style.display = 'none';
+      results.innerHTML = '';
+      results.appendChild(renderStudentDetail_(byEmail[selectedStudentEmail]));
+      return;
+    }
+    selectedStudentEmail = null;
+    filtersBar.style.display = 'flex';
+    renderStudentsList_();
+  }
+
+  function renderStudentsList_() {
+    var byEmail = computeStudents_();
+    var results = document.getElementById('students-results');
+    results.innerHTML = '';
+
+    var list = Object.keys(byEmail).map(function (k) { return byEmail[k]; });
+    if (studentFilters.search) {
+      list = list.filter(function (s) {
+        return (s.name + ' ' + s.email + ' ' + s.phone).toLowerCase().indexOf(studentFilters.search) > -1;
+      });
+    }
+    list.sort(function (a, b) {
+      if (studentFilters.sort === 'most') return b.entries.length - a.entries.length;
+      if (studentFilters.sort === 'name') return (a.name || a.email).localeCompare(b.name || b.email);
+      return b.lastTs - a.lastTs;
+    });
+
+    document.getElementById('s-count').textContent = list.length + (list.length === 1 ? ' student' : ' students');
+
+    if (!list.length) {
+      var empty = document.createElement('p');
+      empty.className = 'empty-note';
+      empty.textContent = 'No students match your search.';
+      results.appendChild(empty);
+      return;
+    }
+
+    var wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    var table = document.createElement('table');
+    table.className = 'table';
+    var thead = document.createElement('thead');
+    var headRow = document.createElement('tr');
+    ['Name', 'Email', 'Phone', 'Status', 'Submissions', 'Last Activity'].forEach(function (h) {
+      var th = document.createElement('th'); th.textContent = h; headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    list.forEach(function (s) {
+      var tr = document.createElement('tr');
+      tr.setAttribute('data-row', '1');
+      var emailKey = String(s.email || '').trim().toLowerCase();
+      tr.onclick = function () { selectedStudentEmail = emailKey; renderStudentsView_(); };
+
+      var nameTd = document.createElement('td'); nameTd.textContent = s.name || '—'; tr.appendChild(nameTd);
+      var emailTd = document.createElement('td'); emailTd.textContent = s.email; tr.appendChild(emailTd);
+      var phoneTd = document.createElement('td'); phoneTd.textContent = s.phone || '—'; tr.appendChild(phoneTd);
+
+      var statusTd = document.createElement('td');
+      var chip = document.createElement('span');
+      chip.className = 'status-chip';
+      chip.style.background = colorForStatus_(s.status);
+      chip.textContent = s.status;
+      statusTd.appendChild(chip);
+      tr.appendChild(statusTd);
+
+      var countTd = document.createElement('td');
+      var badge = document.createElement('span');
+      badge.className = 'count-chip' + (s.entries.length > 1 ? ' multi' : '');
+      badge.textContent = s.entries.length;
+      countTd.appendChild(badge);
+      tr.appendChild(countTd);
+
+      var lastTd = document.createElement('td'); lastTd.textContent = s.lastTs ? timeAgo_(s.lastTs.toISOString()) : '—'; tr.appendChild(lastTd);
+
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    results.appendChild(wrap);
+  }
+
+  function renderStudentDetail_(student) {
+    var wrap = document.createElement('div');
+
+    var back = document.createElement('button');
+    back.type = 'button'; back.className = 'student-back';
+    back.textContent = '← Back to student list';
+    back.onclick = function () { selectedStudentEmail = null; renderStudentsView_(); };
+    wrap.appendChild(back);
+
+    var byKey = groupEntriesByKey_(student.entries);
+    var formCount = Object.keys(byKey).length;
+
+    var header = document.createElement('section');
+    header.className = 'student-detail-header';
+    var h2 = document.createElement('h2'); h2.textContent = student.name || student.email;
+    header.appendChild(h2);
+    var rule = document.createElement('div'); rule.className = 'rule'; header.appendChild(rule);
+
+    var meta = document.createElement('div');
+    meta.className = 'meta-grid';
+    [
+      ['Email', student.email],
+      ['Phone', student.phone || '—'],
+      ['Total submissions', student.entries.length],
+      ['Last activity', student.lastTs ? student.lastTs.toLocaleString() : '—']
+    ].forEach(function (pair) {
+      var item = document.createElement('div'); item.className = 'meta-item';
+      var lbl = document.createElement('span'); lbl.className = 'lbl'; lbl.textContent = pair[0];
+      var val = document.createElement('span'); val.className = 'val'; val.textContent = pair[1];
+      item.appendChild(lbl); item.appendChild(val);
+      meta.appendChild(item);
+    });
+
+    var statusItem = document.createElement('div'); statusItem.className = 'meta-item';
+    var statusLbl = document.createElement('span'); statusLbl.className = 'lbl'; statusLbl.textContent = 'Status';
+    var statusSelect = document.createElement('select');
+    statusSelect.className = 'input';
+    STATUS_OPTIONS.forEach(function (opt) {
+      var o = document.createElement('option');
+      o.value = opt; o.textContent = opt;
+      if (opt === student.status) o.selected = true;
+      statusSelect.appendChild(o);
+    });
+    statusSelect.onchange = function () { changeStudentStatus_(student.email, statusSelect); };
+    statusItem.appendChild(statusLbl); statusItem.appendChild(statusSelect);
+    meta.appendChild(statusItem);
+    header.appendChild(meta);
+
+    if (student.entries.length > 1) {
+      var flag = document.createElement('p');
+      flag.className = 'repeat-note';
+      flag.textContent = 'This student has submitted ' + student.entries.length + ' times across ' +
+        formCount + (formCount === 1 ? ' form.' : ' forms.');
+      header.appendChild(flag);
+    }
+    wrap.appendChild(header);
+
+    Object.keys(byKey).forEach(function (key) {
+      var entries = byKey[key].slice().sort(function (a, b) { return new Date(b.row[1]) - new Date(a.row[1]); });
+      var group = document.createElement('section');
+      group.className = 'entry-group';
+      var h3 = document.createElement('h3'); h3.textContent = entries[0].sheetName + ' (' + entries.length + ')';
+      group.appendChild(h3);
+
+      entries.forEach(function (e) {
+        var block = document.createElement('div'); block.className = 'entry-block';
+        var when = document.createElement('p'); when.className = 'entry-when'; when.textContent = new Date(e.row[1]).toLocaleString();
+        block.appendChild(when);
+
+        var dl = document.createElement('dl'); dl.className = 'entry-fields';
+        e.headers.forEach(function (h, colIdx) {
+          if (SKIP_FIELDS.indexOf(h) > -1) return;
+          var val = e.row[colIdx];
+          if (val === '' || val == null) return;
+          var dt = document.createElement('dt'); dt.textContent = h;
+          var dd = document.createElement('dd'); dd.textContent = val;
+          dl.appendChild(dt); dl.appendChild(dd);
+        });
+        if (dl.children.length) block.appendChild(dl);
+        group.appendChild(block);
+      });
+
+      wrap.appendChild(group);
+    });
+
+    return wrap;
+  }
+
+  // Mirrors a student-level status change onto that student's rows in every
+  // per-form sheet already loaded client-side, so the change is visible in
+  // those tables immediately — matches what updateStudentStatus does on the
+  // server (see updateRowStatusesForEmail_ in Code.gs) without waiting for
+  // the next Refresh.
+  function applyStatusToRows_(emailKey, newStatus) {
+    Object.keys(DATA).forEach(function (key) {
+      var sheet = DATA[key];
+      var emailIdx = findCol_(sheet.headers, 'Email');
+      var statusIdx = findCol_(sheet.headers, 'Status');
+      if (emailIdx === -1 || statusIdx === -1) return;
+      sheet.rows.forEach(function (row) {
+        if (String(row[emailIdx]).trim().toLowerCase() === emailKey) row[statusIdx] = newStatus;
+      });
+    });
+  }
+
+  function changeStudentStatus_(email, select) {
+    var newStatus = select.value;
+    var emailKey = String(email || '').trim().toLowerCase();
+    select.disabled = true;
+
+    if (IS_PREVIEW) {
+      STUDENT_STATUSES[emailKey] = newStatus;
+      applyStatusToRows_(emailKey, newStatus);
+      select.disabled = false;
+      return;
+    }
+
+    function onStatusSaved() {
+      STUDENT_STATUSES[emailKey] = newStatus;
+      applyStatusToRows_(emailKey, newStatus);
+      select.disabled = false;
+    }
+    function onStatusFailure(err) {
+      select.disabled = false;
+      alert('Could not update status: ' + (err && err.message ? err.message : err));
+    }
+
+    if (HAS_REMOTE_URL) {
+      callBackend_('updateStudentStatus', { password: ADMIN_PASSWORD, email: email, status: newStatus }, onStatusSaved, onStatusFailure);
+      return;
+    }
+    google.script.run.withSuccessHandler(onStatusSaved).withFailureHandler(onStatusFailure).updateStudentStatus(ADMIN_PASSWORD, email, newStatus);
+  }
+
+  /* ====================== Share Tests ====================== */
+
+  function copyToClipboard_(text, btn, defaultLabel) {
+    function done(ok) {
+      btn.textContent = ok ? 'Copied' : 'Copy failed';
+      setTimeout(function () { btn.textContent = defaultLabel; }, 1500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      return;
+    }
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      done(true);
+    } catch (e) { done(false); }
+  }
+
+  function renderTests_() {
+    var el = document.getElementById('tests-view');
+    el.innerHTML = '';
+
+    var intro = document.createElement('p');
+    intro.style.cssText = 'font-size:15px;line-height:1.6;color:var(--color-neutral-700);margin:0 0 var(--space-6);max-width:640px';
+    intro.textContent = "These pages aren't linked anywhere on the site — share a link directly with a student when you want them to take one.";
+    el.appendChild(intro);
+
+    // Grouped by language, in the order each language first appears in
+    // SHARE_TESTS — adding a third language later just means a third group,
+    // no extra wiring needed here.
+    var languages = [];
+    SHARE_TESTS.forEach(function (test) {
+      if (languages.indexOf(test.language) === -1) languages.push(test.language);
+    });
+
+    languages.forEach(function (language) {
+      var group = document.createElement('section');
+      group.className = 'test-lang-group';
+
+      var heading = document.createElement('h2');
+      heading.className = 'test-lang-heading';
+      heading.textContent = language;
+      group.appendChild(heading);
+
+      var grid = document.createElement('div');
+      grid.className = 'test-grid';
+
+      SHARE_TESTS.forEach(function (test, i) {
+        if (test.language !== language) return;
+        grid.appendChild(buildTestCard_(test, i));
+      });
+
+      group.appendChild(grid);
+      el.appendChild(group);
+    });
+  }
+
+  function buildTestCard_(test, i) {
+      var link = SITE_BASE_URL.replace(/\/$/, '') + '/' + test.path;
+
+      var card = document.createElement('section');
+      card.className = 'test-card';
+
+      var h3 = document.createElement('h3'); h3.textContent = test.name; card.appendChild(h3);
+      var desc = document.createElement('p'); desc.className = 'desc'; desc.textContent = test.description; card.appendChild(desc);
+
+      var linkInput = document.createElement('input');
+      linkInput.className = 'input link-input';
+      linkInput.type = 'text'; linkInput.readOnly = true; linkInput.value = link;
+      linkInput.onclick = function () { linkInput.select(); };
+      card.appendChild(linkInput);
+
+      var actions = document.createElement('div'); actions.className = 'test-actions';
+
+      var copyLinkBtn = document.createElement('button');
+      copyLinkBtn.type = 'button'; copyLinkBtn.className = 'btn btn-secondary'; copyLinkBtn.textContent = 'Copy link';
+      copyLinkBtn.onclick = function () { copyToClipboard_(link, copyLinkBtn, 'Copy link'); };
+      actions.appendChild(copyLinkBtn);
+
+      var previewLink = document.createElement('a');
+      previewLink.className = 'btn btn-secondary'; previewLink.textContent = 'Preview';
+      previewLink.href = link; previewLink.target = '_blank'; previewLink.rel = 'noopener';
+      actions.appendChild(previewLink);
+
+      var shareBtn = document.createElement('button');
+      shareBtn.type = 'button'; shareBtn.className = 'btn btn-primary'; shareBtn.textContent = 'Share with a message';
+      actions.appendChild(shareBtn);
+      card.appendChild(actions);
+
+      var panel = document.createElement('div'); panel.className = 'share-panel';
+      if (openTestIndex === i) panel.classList.add('open');
+
+      var textarea = document.createElement('textarea');
+      textarea.className = 'input'; textarea.value = test.defaultMessage;
+      panel.appendChild(textarea);
+
+      var shareActions = document.createElement('div'); shareActions.className = 'test-actions';
+
+      var copyMsgBtn = document.createElement('button');
+      copyMsgBtn.type = 'button'; copyMsgBtn.className = 'btn btn-secondary'; copyMsgBtn.textContent = 'Copy message + link';
+      copyMsgBtn.onclick = function () { copyToClipboard_(textarea.value.trim() + '\n\n' + link, copyMsgBtn, 'Copy message + link'); };
+      shareActions.appendChild(copyMsgBtn);
+
+      var waLink = document.createElement('a');
+      waLink.className = 'btn btn-secondary'; waLink.textContent = 'WhatsApp';
+      waLink.target = '_blank'; waLink.rel = 'noopener'; waLink.href = '#';
+      waLink.addEventListener('click', function () {
+        this.href = 'https://wa.me/?text=' + encodeURIComponent(textarea.value.trim() + '\n\n' + link);
+      });
+      shareActions.appendChild(waLink);
+
+      var emailLink = document.createElement('a');
+      emailLink.className = 'btn btn-secondary'; emailLink.textContent = 'Email';
+      emailLink.target = '_blank'; emailLink.href = '#';
+      emailLink.addEventListener('click', function () {
+        var subject = encodeURIComponent(test.name + ' — VaniVeda');
+        var body = encodeURIComponent(textarea.value.trim() + '\n\n' + link);
+        this.href = 'mailto:?subject=' + subject + '&body=' + body;
+      });
+      shareActions.appendChild(emailLink);
+
+      panel.appendChild(shareActions);
+      card.appendChild(panel);
+
+      shareBtn.onclick = function () {
+        openTestIndex = openTestIndex === i ? null : i;
+        panel.classList.toggle('open', openTestIndex === i);
+      };
+
+      return card;
+  }
+
+  /* ====================== Syllabus ====================== */
+
+  function renderSyllabus_() {
+    var el = document.getElementById('syllabus-view');
+    el.innerHTML = '';
+
+    var intro = document.createElement('p');
+    intro.style.cssText = 'font-size:15px;line-height:1.6;color:var(--color-neutral-700);margin:0 0 var(--space-6);max-width:640px';
+    intro.textContent = 'Send a candidate the syllabus for their level, with a short note so they know what to expect before their next session.';
+    el.appendChild(intro);
+
+    var grid = document.createElement('div');
+    grid.className = 'test-grid';
+    SHARE_SYLLABUS.forEach(function (item, i) {
+      grid.appendChild(buildSyllabusCard_(item, i));
+    });
+    el.appendChild(grid);
+  }
+
+  function buildSyllabusCard_(item, i) {
+      var link = SITE_BASE_URL.replace(/\/$/, '') + '/' + item.path;
+
+      var card = document.createElement('section');
+      card.className = 'test-card';
+
+      var level = document.createElement('span');
+      level.textContent = item.level;
+      level.style.cssText = 'display:inline-block;background:var(--color-accent-100);color:var(--color-accent-800);'
+        + 'font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;'
+        + 'border-radius:999px;margin-bottom:var(--space-2)';
+      card.appendChild(level);
+
+      var h3 = document.createElement('h3'); h3.textContent = item.name; card.appendChild(h3);
+      var desc = document.createElement('p'); desc.className = 'desc'; desc.textContent = item.description; card.appendChild(desc);
+
+      var linkInput = document.createElement('input');
+      linkInput.className = 'input link-input';
+      linkInput.type = 'text'; linkInput.readOnly = true; linkInput.value = link;
+      linkInput.onclick = function () { linkInput.select(); };
+      card.appendChild(linkInput);
+
+      var actions = document.createElement('div'); actions.className = 'test-actions';
+
+      var copyLinkBtn = document.createElement('button');
+      copyLinkBtn.type = 'button'; copyLinkBtn.className = 'btn btn-secondary'; copyLinkBtn.textContent = 'Copy link';
+      copyLinkBtn.onclick = function () { copyToClipboard_(link, copyLinkBtn, 'Copy link'); };
+      actions.appendChild(copyLinkBtn);
+
+      var previewLink = document.createElement('a');
+      previewLink.className = 'btn btn-secondary'; previewLink.textContent = 'Preview';
+      previewLink.href = link; previewLink.target = '_blank'; previewLink.rel = 'noopener';
+      actions.appendChild(previewLink);
+
+      var shareBtn = document.createElement('button');
+      shareBtn.type = 'button'; shareBtn.className = 'btn btn-primary'; shareBtn.textContent = 'Share with a message';
+      actions.appendChild(shareBtn);
+      card.appendChild(actions);
+
+      var panel = document.createElement('div'); panel.className = 'share-panel';
+      if (openSyllabusIndex === i) panel.classList.add('open');
+
+      var textarea = document.createElement('textarea');
+      textarea.className = 'input'; textarea.value = item.defaultMessage;
+      panel.appendChild(textarea);
+
+      var shareActions = document.createElement('div'); shareActions.className = 'test-actions';
+
+      var copyMsgBtn = document.createElement('button');
+      copyMsgBtn.type = 'button'; copyMsgBtn.className = 'btn btn-secondary'; copyMsgBtn.textContent = 'Copy message + link';
+      copyMsgBtn.onclick = function () { copyToClipboard_(textarea.value.trim() + '\n\n' + link, copyMsgBtn, 'Copy message + link'); };
+      shareActions.appendChild(copyMsgBtn);
+
+      var waLink = document.createElement('a');
+      waLink.className = 'btn btn-secondary'; waLink.textContent = 'WhatsApp';
+      waLink.target = '_blank'; waLink.rel = 'noopener'; waLink.href = '#';
+      waLink.addEventListener('click', function () {
+        this.href = 'https://wa.me/?text=' + encodeURIComponent(textarea.value.trim() + '\n\n' + link);
+      });
+      shareActions.appendChild(waLink);
+
+      var emailLink = document.createElement('a');
+      emailLink.className = 'btn btn-secondary'; emailLink.textContent = 'Email';
+      emailLink.target = '_blank'; emailLink.href = '#';
+      emailLink.addEventListener('click', function () {
+        var subject = encodeURIComponent(item.name + ' — VaniVeda');
+        var body = encodeURIComponent(textarea.value.trim() + '\n\n' + link);
+        this.href = 'mailto:?subject=' + subject + '&body=' + body;
+      });
+      shareActions.appendChild(emailLink);
+
+      panel.appendChild(shareActions);
+      card.appendChild(panel);
+
+      shareBtn.onclick = function () {
+        openSyllabusIndex = openSyllabusIndex === i ? null : i;
+        panel.classList.toggle('open', openSyllabusIndex === i);
+      };
+
+      return card;
+  }
+
+  /* ====================== Docs Templates ====================== */
+
+  function renderDocsTemplates_() {
+    var el = document.getElementById('docs-view');
+    el.innerHTML = '';
+
+    var intro = document.createElement('p');
+    intro.style.cssText = 'font-size:15px;line-height:1.6;color:var(--color-neutral-700);margin:0 0 var(--space-6);max-width:640px';
+    intro.textContent = 'Branded business document templates — download the one you need, or copy its link to grab it from another device.';
+    el.appendChild(intro);
+
+    var grid = document.createElement('div');
+    grid.className = 'test-grid';
+    SHARE_DOCS.forEach(function (item) {
+      grid.appendChild(buildDocsTemplateCard_(item));
+    });
+    el.appendChild(grid);
+  }
+
+  function buildDocsTemplateCard_(item) {
+      var link = SITE_BASE_URL.replace(/\/$/, '') + '/' + item.path;
+      var filename = item.path.split('/').pop();
+
+      var card = document.createElement('section');
+      card.className = 'test-card';
+
+      var h3 = document.createElement('h3'); h3.textContent = item.name; card.appendChild(h3);
+      var desc = document.createElement('p'); desc.className = 'desc'; desc.textContent = item.description; card.appendChild(desc);
+
+      var linkInput = document.createElement('input');
+      linkInput.className = 'input link-input';
+      linkInput.type = 'text'; linkInput.readOnly = true; linkInput.value = link;
+      linkInput.onclick = function () { linkInput.select(); };
+      card.appendChild(linkInput);
+
+      var actions = document.createElement('div'); actions.className = 'test-actions';
+
+      var copyLinkBtn = document.createElement('button');
+      copyLinkBtn.type = 'button'; copyLinkBtn.className = 'btn btn-secondary'; copyLinkBtn.textContent = 'Copy link';
+      copyLinkBtn.onclick = function () { copyToClipboard_(link, copyLinkBtn, 'Copy link'); };
+      actions.appendChild(copyLinkBtn);
+
+      var downloadLink = document.createElement('a');
+      downloadLink.className = 'btn btn-primary'; downloadLink.textContent = 'Download';
+      downloadLink.href = link; downloadLink.download = filename; downloadLink.target = '_blank'; downloadLink.rel = 'noopener';
+      actions.appendChild(downloadLink);
+
+      card.appendChild(actions);
+      return card;
+  }
+
+  /* ====================== Per-form data tables ====================== */
+
+  function populateStatusFilter_() {
+    var sel = document.getElementById('d-status');
+    var current = sel.value;
+    sel.innerHTML = '<option value="">All statuses</option>';
+    STATUS_OPTIONS.forEach(function (opt) {
+      var o = document.createElement('option'); o.value = opt; o.textContent = opt; sel.appendChild(o);
+    });
+    sel.value = current;
+  }
+
+  function initDataFilters_() {
+    document.getElementById('d-search').addEventListener('input', function (e) {
+      filters.search = e.target.value.trim().toLowerCase();
+      renderDataTable_();
+    });
+    document.getElementById('d-status').addEventListener('change', function (e) {
+      filters.status = e.target.value;
+      renderDataTable_();
+    });
+    document.getElementById('d-sort').addEventListener('change', function (e) {
+      filters.sortDir = e.target.value;
+      renderDataTable_();
+    });
+    document.getElementById('d-from').addEventListener('change', function (e) {
+      filters.dateFrom = e.target.value;
+      renderDataTable_();
+    });
+    document.getElementById('d-to').addEventListener('change', function (e) {
+      filters.dateTo = e.target.value;
+      renderDataTable_();
+    });
+    document.getElementById('d-clear').addEventListener('click', function () {
+      filters = { search: '', status: '', dateFrom: '', dateTo: '', sortDir: 'desc' };
+      document.getElementById('d-search').value = '';
+      document.getElementById('d-status').value = '';
+      document.getElementById('d-sort').value = 'desc';
+      document.getElementById('d-from').value = '';
+      document.getElementById('d-to').value = '';
+      renderDataTable_();
+    });
+  }
+
+  function applyDataFilters_(rows) {
+    return rows.filter(function (row) {
+      if (filters.status && row[2] !== filters.status) return false;
+      if (filters.search) {
+        var hit = row.some(function (cell) { return String(cell).toLowerCase().indexOf(filters.search) > -1; });
+        if (!hit) return false;
+      }
+      if (filters.dateFrom || filters.dateTo) {
+        var d = new Date(row[1]);
+        if (filters.dateFrom && d < new Date(filters.dateFrom + 'T00:00:00')) return false;
+        if (filters.dateTo && d > new Date(filters.dateTo + 'T23:59:59')) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderDataTable_() {
+    var sheet = DATA[currentTab];
+    var thead = document.getElementById('data-thead');
+    var tbody = document.getElementById('data-tbody');
+    thead.innerHTML = ''; tbody.innerHTML = '';
+
+    var filteredRows = applyDataFilters_(sheet.rows);
+    var active = filters.search || filters.status || filters.dateFrom || filters.dateTo;
+    document.getElementById('d-count').textContent = active
+      ? 'Showing ' + filteredRows.length + ' of ' + sheet.rows.length
+      : sheet.rows.length + (sheet.rows.length === 1 ? ' row' : ' rows');
+
+    var table = document.getElementById('data-table');
+    var empty = document.getElementById('data-empty');
+    if (!filteredRows.length) {
+      table.style.display = 'none';
+      empty.textContent = sheet.rows.length ? 'No rows match your filters.' : 'No submissions in this sheet yet.';
+      empty.style.display = 'block';
+      return;
+    }
+    table.style.display = 'table';
+    empty.style.display = 'none';
+
+    var headRow = document.createElement('tr');
+    sheet.headers.forEach(function (h) { var th = document.createElement('th'); th.textContent = h; headRow.appendChild(th); });
+    thead.appendChild(headRow);
+
+    filteredRows
+      .slice()
+      .sort(function (a, b) {
+        var diff = new Date(a[1]) - new Date(b[1]);
+        return filters.sortDir === 'asc' ? diff : -diff;
+      })
+      .forEach(function (row) {
+        var tr = document.createElement('tr');
+        row.forEach(function (cell, colIdx) {
+          var td = document.createElement('td');
+          if (colIdx === 1 && cell) {
+            td.textContent = new Date(cell).toLocaleString();
+          } else if (colIdx === 2) {
+            // Status is edited only from the Students tab — this is a
+            // read-only badge reflecting whatever existed when this row
+            // was logged.
+            var span = document.createElement('span');
+            span.className = 'status-text';
+            span.style.color = colorForStatus_(cell);
+            span.textContent = cell;
+            td.appendChild(span);
+          } else {
+            td.textContent = cell;
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+  }
+
+  /* ====================== Boot ====================== */
+
+  document.getElementById('login-preview-hint').style.display = IS_PREVIEW ? 'block' : 'none';
+  document.getElementById('login-remote-hint').style.display = HAS_REMOTE_URL ? 'block' : 'none';
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('login-error').textContent = '';
+    document.getElementById('login-submit').disabled = true;
+    attemptLogin_(document.getElementById('vv-pw').value);
+  });
+  document.getElementById('refresh').addEventListener('click', load);
+  document.getElementById('logout').addEventListener('click', logout_);
+
+  initStudentsFilters_();
+  initDataFilters_();
+
+  (function initAuth_() {
+    var saved = null;
+    try { saved = sessionStorage.getItem('vv_admin_pw'); } catch (e) {}
+    if (saved) attemptLogin_(saved, { silent: true });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "brand": {
+    "name": "VaniVeda",
+    "tagline": "The Voice That Drives Mastery",
+    "shortDescription": "Online French language institute for DELF, TCF and TEF, built around the score you need.",
+    "footerNote": "The voice that drives mastery"
+  },
+  "contact": {
+    "phone": "+91 96542 24342",
+    "phoneHref": "tel:+919654224342",
+    "email": "vanivedalanguagehub@gmail.com",
+    "emailHref": "mailto:vanivedalanguagehub@gmail.com"
+  },
+  "social": {
+    "facebook": "https://www.facebook.com/share/1D2G3sdDg1/",
+    "instagram": "https://www.instagram.com/vanivedalanguagehub",
+    "youtube": "https://youtube.com/@vanivedalanguagehub"
+  },
+  "site": {
+    "baseUrl": "https://www.vaniveda.com",
+    "copyrightYear": 2026,
+    "creditName": "WebGraha",
+    "creditUrl": "https://webgraha.com"
+  }
+}

@@ -1,0 +1,813 @@
+/* VaniVeda — draft 3 shared design system
+   Brand: Power (red) -> Discipline (graphite) -> Victory (gold, earned sparingly). */
+
+:root {
+  --red: #D62839;
+  --red-deep: #B01F2E;
+  --graphite: #1F2933;
+  --ink: #16181D;
+  --gold: #F5A623;
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --text: #16181D;
+  --text-soft: #5B6169;
+  --border: #E4E6EA;
+  --muted: #9AA0A8;
+
+  --font-display: 'Oswald', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --notch: 18px;
+  --container: 1240px;
+}
+
+* { box-sizing: border-box; }
+/* overflow-x needs to live on html, not just body — the mobile nav panel is
+   position:fixed with a translateX(100%) transform to push it off-screen
+   when closed, and its untransformed box still counts toward the page's
+   scrollable width. Without this, that off-screen panel is still reachable
+   by dragging/swiping sideways on a touch device even though nothing is
+   visibly overflowing. */
+html { scroll-behavior: smooth; overflow-x: hidden; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  width: 100%;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--red); text-decoration: none; }
+button, input, select, textarea { font-family: var(--font-body); }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.95;
+  margin: 0;
+}
+h1 { font-size: clamp(38px, 6.4vw, 72px); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: clamp(32px, 4.4vw, 48px); font-weight: 700; }
+h3 { font-size: clamp(24px, 3vw, 32px); font-weight: 700; }
+h4 { font-size: clamp(19px, 2vw, 22px); font-weight: 600; }
+p { margin: 0; }
+
+.eyebrow {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 16px;
+}
+.eyebrow.on-dark { color: var(--gold); }
+
+.lede { font-size: clamp(17px, 1.5vw, 20px); line-height: 1.6; color: var(--text-soft); }
+.on-dark .lede, .bg-graphite .lede, .bg-ink .lede { color: #C7CCD2; }
+
+/* ---------- Layout ---------- */
+.container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+.section { padding: clamp(38px, 5.2vw, 72px) 0; }
+.section-tight { padding: clamp(26px, 3.6vw, 46px) 0; }
+.bg-paper { background: var(--bg); }
+.bg-white { background: var(--surface); }
+.bg-graphite { background: var(--graphite); color: #fff; }
+.bg-ink { background: var(--ink); color: #fff; }
+.bg-red { background: var(--red); color: #fff; }
+.border-top { border-top: 1px solid var(--border); }
+.border-bottom { border-bottom: 1px solid var(--border); }
+.bg-graphite.border-bottom, .bg-ink.border-bottom { border-bottom-color: rgba(255,255,255,0.12); }
+
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--min, 260px), 1fr));
+  gap: var(--gap, 24px);
+}
+/* Fixed-count grid for exactly-3-item rows (differentiators, attestations, etc).
+   Jumps straight from 1 to 3 columns instead of using auto-fit, which at
+   in-between (tablet) widths fits exactly 2 columns and strands the 3rd
+   item alone with dead space beside it. */
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap, 24px);
+}
+@media (min-width: 780px) {
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+/* Fixed 2-up grid — used with .stagger-alt where a true brick-offset 2x2
+   needs a guaranteed 2 columns (auto-fit would go wider on a full-width
+   container and flatten the stagger into one row). */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap, 24px);
+}
+@media (min-width: 560px) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+}
+.stack { display: flex; flex-direction: column; gap: var(--gap, 16px); }
+.row { display: flex; align-items: center; gap: var(--gap, 16px); flex-wrap: wrap; }
+.row.between { justify-content: space-between; }
+.row.end { align-items: flex-end; }
+
+/* Always-4-column tab row (A1/A2/B1/B2) — avoids the last button wrapping
+   to its own line alone on narrow phones. */
+.level-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.level-tabs .btn { padding-left: 8px; padding-right: 8px; justify-content: center; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 18px 30px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.15s ease;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(20,22,28,0.14); }
+.btn:active { transform: translateY(0); box-shadow: none; }
+@media (prefers-reduced-motion: reduce) { .btn:hover { transform: none; } }
+.btn svg { width: 14px; height: 14px; flex: none; }
+.btn-primary { background: var(--red); color: #fff; }
+.btn-primary:hover { background: var(--red-deep); color: #fff; }
+.btn-secondary { background: transparent; color: inherit; border-color: rgba(0,0,0,0.2); }
+.btn-secondary:hover { border-color: var(--red); color: var(--red); }
+.on-dark .btn-secondary, .bg-graphite .btn-secondary, .bg-ink .btn-secondary, .bg-red .btn-secondary { border-color: rgba(255,255,255,0.35); color: #fff; }
+.on-dark .btn-secondary:hover, .bg-graphite .btn-secondary:hover, .bg-ink .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+/* On a red section the default hover (red border + red text) is invisible
+   against the red background — fill white instead, matching the sibling
+   .btn-white treatment already used on these same CTA bands. */
+.bg-red .btn-secondary:hover { background: #fff; border-color: #fff; color: var(--red); }
+.btn-white { background: #fff; color: var(--red); }
+.btn-white:hover { background: var(--ink); color: #fff; }
+.btn-outline-red { background: transparent; color: var(--red); border-color: var(--red); }
+.btn-outline-red:hover { background: var(--red); color: #fff; }
+.btn-full { width: 100%; justify-content: center; }
+.btn-sm { padding: 13px 22px; font-size: 12px; }
+.btn-sm:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(20,22,28,0.12); }
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.link-arrow .circle {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #fff; border: 1px solid var(--border);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.link-arrow:hover .circle { background: var(--red); color: #fff; border-color: var(--red); }
+.on-dark .link-arrow, .bg-graphite .link-arrow { color: #fff; }
+
+/* ---------- Notch card (signature shape: cut corners, not full diagonal) ---------- */
+.notch {
+  clip-path: polygon(var(--notch) 0, 100% 0, 100% calc(100% - var(--notch)), calc(100% - var(--notch)) 100%, 0 100%, 0 var(--notch));
+}
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: clamp(20px, 2.4vw, 32px);
+  box-shadow: 0 1px 2px rgba(20,22,28,0.03), 0 8px 20px rgba(20,22,28,0.045);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card.on-dark { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); color: #fff; }
+.card.bg-red { background: var(--red); border-color: var(--red); color: #fff; }
+.card.bg-graphite { background: var(--graphite); border-color: var(--graphite); color: #fff; }
+.card.bg-ink { background: var(--ink); border-color: var(--ink); color: #fff; }
+.card-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 34px;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+/* ---------- Nav ---------- */
+.site-nav {
+  position: sticky; top: 0; z-index: 60;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.site-nav .container { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 12px; padding-bottom: 12px; }
+.brand { display: flex; align-items: center; }
+.brand img { height: 30px; width: auto; }
+.nav-links { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); }
+.nav-link {
+  position: relative;
+  padding: 8px 0;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  border-bottom: 2px solid transparent;
+}
+.nav-link:hover { color: var(--text); }
+.nav-link.active { color: var(--text); border-bottom-color: var(--red); }
+.nav-item { position: relative; }
+.nav-item .caret { width: 9px; height: 9px; margin-left: 5px; transition: transform 0.2s ease; }
+.nav-item:hover .caret { transform: rotate(180deg); }
+.nav-dropdown {
+  position: absolute; top: 100%; left: 0; margin-top: 10px;
+  min-width: 220px; background: #fff; border: 1px solid var(--border);
+  box-shadow: 0 18px 40px rgba(20,22,28,0.12);
+  opacity: 0; visibility: hidden; transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+  padding: 8px;
+  z-index: 10;
+}
+.nav-item:hover .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-dropdown a { display: block; padding: 12px 14px; font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; }
+.nav-dropdown a:hover { background: var(--bg); color: var(--red); }
+.nav-dropdown hr { border: none; border-top: 1px solid var(--border); margin: 8px 4px; }
+.nav-cta { display: flex; align-items: center; gap: 18px; }
+.nav-toggle {
+  display: none; width: 42px; height: 42px; border: 1px solid var(--border); background: #fff;
+  flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer;
+  color: var(--text);
+}
+.nav-toggle-bar {
+  display: block; width: 18px; height: 2px; background: currentColor; border-radius: 1px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) {
+  .nav-toggle-bar { transition: none; }
+}
+
+.nav-panel-extra { display: none; }
+
+@media (max-width: 900px) {
+  .nav-links { position: fixed; top: 65px; right: 0; left: 0; height: calc(100vh - 65px); background: #fff; flex-direction: column; align-items: stretch; padding: 20px clamp(20px,4vw,40px) 0; gap: 4px; overflow-y: auto; transform: translateX(100%); transition: transform 0.25s ease; z-index: 55; }
+  .nav-links.open { transform: translateX(0); }
+  .nav-link { border-bottom: 1px solid var(--border); padding: 16px 0; }
+  .nav-item { width: 100%; }
+  .nav-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: none; border-left: 2px solid var(--border); display: none; margin-top: 0; padding-left: 14px; }
+  .nav-item.open .nav-dropdown { display: block; }
+  .nav-item.open .caret { transform: rotate(180deg); }
+  .nav-toggle { display: inline-flex; }
+  .nav-cta .btn { padding: 12px 20px; font-size: 12px; }
+
+  /* Fills the empty space below a short link list instead of leaving it
+     blank — pinned to the bottom of the panel via margin-top:auto. */
+  .nav-panel-extra {
+    display: block; margin-top: auto; padding: 22px 0 28px;
+    border-top: 1px solid var(--border);
+  }
+  .nav-panel-contact { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .nav-panel-contact a { font-weight: 600; font-size: 14px; color: var(--text); }
+  .nav-panel-contact a:hover { color: var(--red); }
+  /* .social-row is styled for the dark footer (white icons); override for
+     this light panel so the icons aren't invisible white-on-white. */
+  .nav-panel-extra .social-row a { color: var(--text); border-color: var(--border); }
+  .nav-panel-extra .social-row a:hover { background: var(--red); border-color: var(--red); color: #fff; }
+}
+
+/* ---------- Marquee ---------- */
+.marquee-wrap { overflow: hidden; border-bottom: 1px solid var(--border); }
+.marquee-track { display: flex; width: max-content; animation: vv-marquee 32s linear infinite; }
+.marquee-group { display: flex; align-items: center; gap: 36px; padding: 22px 18px; flex: none; }
+.marquee-track span.txt {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: clamp(30px, 4.4vw, 62px); white-space: nowrap;
+  color: transparent; -webkit-text-stroke: 1px var(--graphite);
+}
+.marquee-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); flex: none; }
+@keyframes vv-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* ---------- Reveal-on-scroll ---------- */
+[data-reveal] { opacity: 0; }
+[data-reveal].in { animation: vv-up 0.75s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes vv-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+[data-bar] { transform: scaleX(0); transform-origin: left; }
+[data-bar].in { animation: vv-bar 0.9s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes vv-bar { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-bar] { opacity: 1 !important; transform: none !important; animation: none !important; }
+}
+
+/* ---------- Stats ---------- */
+.stat-num { font-family: var(--font-display); font-weight: 700; font-size: clamp(38px, 4.2vw, 56px); line-height: 1; }
+.stat-bar { display: block; height: 3px; background: var(--red); margin: 12px 0 8px; }
+.stat-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0; }
+
+/* ---------- Chips / tags ---------- */
+.chip {
+  display: inline-block;
+  border: 1px solid var(--border);
+  padding: 9px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: #fff;
+}
+.on-dark .chip, .bg-graphite .chip, .bg-ink .chip { border-color: rgba(255,255,255,0.28); color: #fff; background: transparent; }
+.tag { display: inline-block; background: rgba(0,0,0,0.05); padding: 8px 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.on-dark .tag, .bg-graphite .tag, .bg-ink .tag { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ---------- 3D stage ---------- */
+.stage {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 36vw, 460px);
+}
+.stage-frame { background: var(--graphite); }
+.stage-caption {
+  text-align: center; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700; margin: 10px 0 0;
+}
+
+/* ---------- Placeholder texture (used instead of fake stock photos) ---------- */
+.hatch {
+  background-image: repeating-linear-gradient(135deg, #ECEEF1 0 10px, #F6F7F8 10px 20px);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.hatch .hatch-label {
+  font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.1em;
+  color: var(--muted); text-transform: uppercase;
+}
+/* Shorter image blocks on phones so placeholder-heavy grids (attestations,
+   testimonials) don't turn into a long scroll of gray boxes. */
+@media (max-width: 640px) {
+  .attestation-thumb { aspect-ratio: 16 / 9 !important; }
+  .testimonial-thumb { aspect-ratio: 16 / 10 !important; }
+}
+.play-btn {
+  width: 60px; height: 60px; border-radius: 50%; background: var(--red); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 24px rgba(214,40,57,0.4);
+  transition: transform 0.2s ease;
+}
+.play-btn svg { width: 18px; height: 18px; }
+.card:hover .play-btn { transform: scale(1.08); }
+@media (prefers-reduced-motion: reduce) { .card:hover .play-btn { transform: none; } }
+
+/* Hero reel mute toggle (courses.html) — the only control exposed on the
+   embedded video; no play/pause, since it always autoplays and loops. */
+.hero-reel-mute {
+  position: absolute; bottom: 14px; right: 14px; z-index: 2;
+  width: 36px; height: 36px; border-radius: 50%; border: none;
+  background: rgba(15,17,21,0.55); color: #fff; backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.hero-reel-mute:hover { background: rgba(15,17,21,0.75); transform: scale(1.06); }
+.hero-reel-mute[disabled] { opacity: 0.5; cursor: default; }
+.hero-reel-mute[disabled]:hover { background: rgba(15,17,21,0.55); transform: none; }
+.hero-reel-mute svg { width: 18px; height: 18px; }
+@media (prefers-reduced-motion: reduce) { .hero-reel-mute:hover { transform: none; } }
+
+/* ---------- Branded photography (real photos, tinted to stay on-brand) ----------
+   Draft 4 replaces the hatch placeholders with realistic stock-style photos.
+   The tint keeps a grid of unrelated stock photos reading as one cohesive,
+   branded system instead of generic clip-art — same job the hatch pattern did. */
+.photo {
+  position: relative;
+  overflow: hidden;
+  background: var(--graphite);
+  isolation: isolate;
+}
+.photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+  filter: saturate(0.92) contrast(1.04);
+  transition: transform 0.6s cubic-bezier(.16,1,.3,1);
+}
+.photo::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(155deg, rgba(31,41,51,0.4) 0%, rgba(214,40,57,0.16) 45%, transparent 78%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.photo.photo-shade::after {
+  background: linear-gradient(to top, rgba(15,17,21,0.92) 0%, rgba(15,17,21,0.4) 42%, transparent 70%);
+  mix-blend-mode: normal;
+}
+/* Real documents (certificates, attestations) instead of atmospheric
+   stock photography: no brand tint (a tinted scan reads as altered, not
+   authentic — the opposite of what a "proof of legitimacy" image needs
+   to convey) and object-fit:contain instead of cover, since cropping a
+   certificate risks cutting off the score table or signature that's the
+   actual point of showing it. */
+.photo.photo-doc::after { display: none; }
+.photo.photo-doc img { object-fit: contain; filter: none; }
+
+/* Media card: real proof material (certificate scans, video reviews)
+   where the media itself must stay untouched — no tint, no crop — so
+   the on-brand signal moves to the card chrome instead: a diag-accent
+   corner (see below), a colored line between media and caption, and a
+   hover lift using the box-shadow/transform transition .card already
+   declares but never triggers on its own. */
+.media-card:hover { transform: translateY(-4px); box-shadow: 0 20px 44px rgba(20,22,28,0.13); }
+@media (prefers-reduced-motion: reduce) { .media-card:hover { transform: none; } }
+.media-frame { position: relative; overflow: hidden; background: var(--ink); }
+.media-caption { border-top: 3px solid var(--media-accent, var(--red)); }
+/* Compact square thumbnails — natural document/video ratios ran up to
+   ~1.8x taller than wide, which made the grid very tall. A uniform 1:1
+   crop keeps the grid compact; nothing is lost since every thumbnail
+   opens the full, uncropped file in the lightbox on click. */
+.media-thumb { aspect-ratio: 1/1; }
+.media-frame video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.media-card[data-lightbox] { cursor: pointer; }
+.media-card[data-lightbox]:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+
+/* Proof lightbox: click any certificate/video card to see the full,
+   uncropped file. <dialog> gives native focus trap + Escape-to-close +
+   backdrop for free — see assets/proof-lightbox.js. */
+.proof-lightbox { position: fixed; border: none; padding: 20px; background: transparent; overflow: visible; max-width: min(92vw, 720px); width: 100%; }
+.proof-lightbox[open] { display: flex; flex-direction: column; align-items: center; }
+.proof-lightbox::backdrop { background: rgba(15,17,21,0.82); backdrop-filter: blur(4px); }
+.proof-lightbox-body { display: flex; align-items: center; justify-content: center; width: 100%; }
+.proof-lightbox-body img, .proof-lightbox-body video { display: block; max-width: 100%; max-height: 75vh; width: auto; height: auto; }
+.proof-lightbox-caption { color: #fff; font-size: 14px; margin-top: 14px; text-align: center; }
+.proof-lightbox-close {
+  position: absolute; top: 8px; right: 8px; width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(15,17,21,0.65); color: #fff; border: none; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 2;
+}
+.proof-lightbox-close:hover { background: rgba(15,17,21,0.85); }
+.proof-lightbox-close svg { width: 18px; height: 18px; }
+.card:hover .photo img, a:hover .photo img { transform: scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .photo img { transition: none; }
+  .card:hover .photo img, a:hover .photo img { transform: none; }
+}
+.photo-credit {
+  position: absolute; bottom: 10px; right: 12px; z-index: 1;
+  font-size: 9px; letter-spacing: 0.08em; color: rgba(255,255,255,0.55);
+}
+
+/* ---------- Accordion (FAQ) ---------- */
+details.faq {
+  background: #fff; border: 1px solid var(--border);
+  padding: 22px 26px; margin-bottom: 12px;
+}
+details.faq summary {
+  list-style: none; cursor: pointer;
+  font-family: var(--font-display); font-weight: 700; font-size: 19px; text-transform: uppercase;
+  display: flex; justify-content: space-between; align-items: center; gap: 20px;
+}
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary .plus { color: var(--red); font-size: 24px; line-height: 1; transition: transform 0.2s ease; flex: none; }
+details.faq[open] summary .plus { transform: rotate(45deg); }
+details.faq p { font-size: 16px; line-height: 1.65; color: var(--text-soft); margin: 14px 0 0; }
+details.faq.on-dark { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); }
+details.faq.on-dark p { color: #C7CCD2; }
+
+/* ---------- Forms ---------- */
+label.field { display: block; }
+label.field .label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.field input, .field select, .field textarea {
+  width: 100%; border: 1px solid var(--border); background: var(--bg);
+  padding: 15px; font-size: 16px; color: var(--text);
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--red); }
+.field textarea { resize: vertical; }
+.search-field {
+  width: 100%; background: #fff; border: 1px solid var(--border);
+  padding: 18px 20px; font-size: 16px; color: var(--text);
+}
+.search-field:focus { outline: none; border-color: var(--red); }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--graphite); color: #fff; }
+/* padding-top/bottom only — this element also has .container, and a padding
+   shorthand here would overwrite (not merge with) .container's left/right
+   padding, since .site-footer .top has higher specificity and this is the
+   same CSS property. That was silently zeroing out the footer's horizontal
+   padding on every page. */
+.site-footer .top { padding-top: clamp(36px, 4.2vw, 60px); padding-bottom: 28px; }
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 36px; margin-bottom: 48px; }
+.footer-brand img { height: 26px; margin-bottom: 18px; }
+.footer-brand p { font-size: 15px; line-height: 1.65; color: #9AA0A8; max-width: 320px; margin-bottom: 20px; }
+.social-row { display: flex; gap: 10px; }
+.social-row a {
+  width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.16);
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.social-row a:hover { background: var(--red); border-color: var(--red); }
+.social-row svg { width: 16px; height: 16px; }
+.footer-col p.head { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #5B6169; margin-bottom: 16px; }
+.footer-col a { display: block; color: #fff; font-size: 15px; margin-bottom: 10px; }
+.footer-col a:hover { color: var(--red); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.12); padding-top: 24px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #5B6169;
+}
+.footer-bottom a { color: inherit; }
+.footer-bottom a:hover { color: #fff; }
+
+@media (max-width: 640px) {
+  /* Courses + Company sit side by side instead of both stacking full-width —
+     halves the vertical space those two link groups take up on phones. */
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; margin-bottom: 36px; }
+  .footer-brand, .footer-col-wide { grid-column: 1 / -1; }
+  .footer-col a { font-size: 14px; }
+  .footer-bottom { flex-direction: column; gap: 8px; }
+}
+
+/* ---------- Utility ---------- */
+.text-center { text-align: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.max-w-sm { max-width: 460px; }
+.max-w-md { max-width: 620px; }
+.max-w-lg { max-width: 760px; }
+.on-gold { color: var(--gold); }
+.on-red { color: var(--red); }
+.divider-v { width: 1px; height: 44px; background: var(--border); }
+.on-dark .divider-v, .bg-graphite .divider-v { background: rgba(255,255,255,0.16); }
+
+@media (max-width: 640px) {
+  .section { padding: 32px 0; }
+}
+
+/* ---------- Modal / quiz ---------- */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(15,17,21,0.72);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay[hidden] { display: none; }
+.modal-card {
+  position: relative;
+  background: #fff;
+  max-width: 640px; width: 100%;
+  max-height: 88vh; overflow-y: auto;
+  padding: clamp(30px, 4.5vw, 50px);
+  box-shadow: 0 30px 70px rgba(8,9,12,0.4);
+  animation: vv-modal-in 0.25s cubic-bezier(.16,1,.3,1);
+}
+@keyframes vv-modal-in { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .modal-card { animation: none; } }
+.modal-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 36px; height: 36px; border: 1px solid var(--border); background: #fff;
+  font-size: 20px; line-height: 1; cursor: pointer; color: var(--text-soft);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { color: var(--red); border-color: var(--red); }
+
+.quiz-progress { display: flex; gap: 8px; margin-bottom: 26px; }
+.quiz-progress-dot { width: 30px; height: 4px; background: var(--border); }
+.quiz-progress-dot.active { background: var(--red); }
+.quiz-progress-dot.done { background: var(--graphite); }
+
+.quiz-step h3 { margin-top: 6px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
+.quiz-option {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  text-align: left; border: 1px solid var(--border); background: #fff; color: var(--text);
+  padding: 16px 20px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.quiz-option:hover { border-color: var(--red); }
+.quiz-option.selected { border-color: var(--red); background: rgba(214,40,57,0.06); color: var(--red); }
+.quiz-option .check { opacity: 0; color: var(--red); font-weight: 700; flex: none; }
+.quiz-option.selected .check { opacity: 1; }
+.quiz-back {
+  background: none; border: none; color: var(--text-soft); font-weight: 700;
+  font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; padding: 8px 0;
+}
+.quiz-back:hover { color: var(--red); }
+
+.quiz-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 22px; }
+.quiz-result-card { background: var(--bg); border-left: 4px solid var(--red); padding: 20px; }
+.quiz-result-value { font-family: var(--font-display); font-weight: 700; font-size: 21px; text-transform: uppercase; margin: 8px 0 6px; line-height: 1.1; }
+.quiz-result-note { font-size: 13px; color: var(--text-soft); line-height: 1.5; }
+
+.field.has-error input { border-color: var(--red); }
+.field-error { display: none; color: var(--red); font-size: 12px; margin-top: 6px; }
+.field.has-error .field-error { display: block; }
+
+/* ---------- Terms & Privacy consent checkbox (every form) ---------- */
+.check-row { display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; }
+.check-row input[type=checkbox] { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--red); flex: none; cursor: pointer; }
+.check-row span { font-size: 13px; line-height: 1.5; color: var(--text-soft); }
+.check-row a { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
+.check-row a:hover { color: var(--red); }
+.check-row.has-error span { color: var(--red); }
+.check-row-error { display: none; color: var(--red); font-size: 12px; margin-top: 6px; }
+.check-row.has-error + .check-row-error { display: block; }
+.quiz-lead-note { font-size: 13px; color: var(--text-soft); margin-top: 16px; }
+
+.phone-group { display: flex; gap: 8px; }
+.phone-group input { flex: 1; min-width: 0; }
+
+.phone-code-select { position: relative; flex: 0 0 96px; }
+.phone-code-trigger {
+  display: flex; align-items: center; gap: 6px; width: 100%;
+  border: 1px solid var(--border); background: var(--bg);
+  padding: 15px 10px; cursor: pointer; font-size: 15px; color: var(--text); font-family: var(--font-body);
+}
+.phone-code-trigger:hover { border-color: var(--muted); }
+.phone-code-trigger img { width: 20px; height: 15px; object-fit: cover; flex: none; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.08); }
+.phone-code-trigger .phone-caret { width: 11px; height: 11px; margin-left: auto; flex: none; color: var(--muted); }
+.phone-code-list {
+  position: absolute; top: calc(100% + 6px); left: 0; z-index: 20;
+  width: 220px; max-height: 216px; overflow-y: auto;
+  background: #fff; border: 1px solid var(--border); box-shadow: 0 16px 32px rgba(20,22,28,0.16);
+  margin: 0; padding: 6px; list-style: none;
+}
+.phone-code-list[hidden] { display: none; }
+.phone-code-list li {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px; cursor: pointer; font-size: 14px; color: var(--text);
+}
+.phone-code-list li img { width: 20px; height: 15px; object-fit: cover; flex: none; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.08); }
+.phone-code-list li span.code { margin-left: auto; color: var(--text-soft); font-size: 13px; }
+.phone-code-list li:hover, .phone-code-list li[data-active] { background: var(--bg); }
+
+/* ---------- Keyboard focus (kept off for mouse/touch via :focus-visible) ---------- */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+.bg-graphite :focus-visible, .bg-ink :focus-visible, .on-dark :focus-visible {
+  outline-color: var(--gold);
+}
+/* Form fields already get a visible focus treatment (border turns red) from
+   their own :focus rule above, which is intentionally more specific than the
+   generic ring here — no change needed for those. */
+
+/* =====================================================================
+   Draft 4 structural system — "Bold Diagonal Blocks"
+   Same tokens (red/graphite/gold, Oswald/Inter) as draft 3, but the
+   composition language moves from centered notch-cards on a stacked
+   grid to angled section boundaries, overlapping panels and asymmetric
+   splits. Additive only — nothing above this line is modified, so every
+   existing page/component keeps working unchanged until it opts in to
+   these classes.
+   ===================================================================== */
+
+/* ---- Diagonal section boundary -----------------------------------
+   A small triangular wedge painted in the *next* section's colour, laid
+   over the bottom edge of the current one. Reads as a rising left-to-right
+   cut between sections without ever clipping real content (unlike
+   clip-path on the section itself, which risks slicing off text near the
+   edge on odd viewport heights). Set --diag-color to the section below's
+   background before use. */
+.diag-cut { position: relative; }
+.diag-cut::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -1px;
+  height: var(--diag-h, clamp(26px, 3.6vw, 56px));
+  background: var(--diag-color, var(--bg));
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .diag-cut::after { height: var(--diag-h-sm, clamp(18px, 5vw, 32px)); }
+}
+
+/* ---- Hero: angled panel bleeding off the right edge ---------------
+   Desktop: an absolutely-positioned, clip-path panel holds the visual
+   (3D globe / photo) so text keeps a plain rectangular column. Mobile:
+   the panel drops the clip-path and becomes a normal stacked block —
+   diagonal cuts read as clutter, not energy, at narrow widths. */
+.hero-diag { position: relative; overflow: hidden; }
+.hero-diag-text { position: relative; z-index: 2; max-width: 560px; }
+.hero-diag-panel {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: min(42%, 600px);
+  clip-path: polygon(16% 0, 100% 0, 100% 100%, 0 100%);
+  background: linear-gradient(155deg, var(--red) 0%, var(--red-deep) 100%);
+}
+.hero-diag-panel .stage { position: absolute; inset: 0; height: auto; width: auto; }
+.hero-diag-panel .stage-caption {
+  position: absolute; left: 20px; right: 20px; bottom: 18px; z-index: 2;
+  margin: 0; text-align: left; pointer-events: none;
+}
+.hero-diag-panel .stage-caption span {
+  display: inline-block; background: rgba(15,17,21,0.45);
+  color: #fff; padding: 6px 10px;
+}
+/* Below this width the uppercase display headline can run wide enough to
+   reach the panel's angled edge — drop to a safely stacked layout well
+   before that happens rather than relying on z-index to paper over it. */
+@media (max-width: 1024px) {
+  .hero-diag-panel {
+    position: relative; width: 100%; clip-path: none;
+    height: clamp(240px, 52vw, 360px); margin-top: 32px;
+  }
+}
+
+/* ---- Overlap card: straddles two section backgrounds --------------
+   Always resets text/heading colour to the normal on-light palette —
+   it's meant to sit on a light card regardless of which colour section
+   it's overlapping into, so it must never inherit that section's
+   on-dark text colour (e.g. .bg-red's white). */
+.overlap-card {
+  position: relative;
+  margin-top: calc(-1 * clamp(40px, 6vw, 84px));
+  z-index: 3;
+  color: var(--text);
+  box-shadow: 0 26px 60px rgba(15,17,21,0.2);
+}
+.overlap-card h1, .overlap-card h2, .overlap-card h3, .overlap-card h4 { color: var(--text); }
+@media (max-width: 640px) {
+  .overlap-card { margin-top: calc(-1 * clamp(24px, 9vw, 44px)); }
+}
+
+/* ---- Asymmetric split: one featured column + a stacked column ----- */
+.split-feature {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(18px, 2.4vw, 28px);
+  align-items: stretch;
+}
+@media (max-width: 780px) { .split-feature { grid-template-columns: 1fr; } }
+.split-feature-stack { display: flex; flex-direction: column; gap: clamp(18px, 2.4vw, 28px); }
+.split-feature-stack > * { flex: 1; }
+
+/* ---- Diagonal accent corner (replaces the small square left-border
+   accent on featured cards with an angled cut sliver in the corner) --- */
+.diag-accent { position: relative; overflow: hidden; }
+.diag-accent::before {
+  content: "";
+  position: absolute; top: 0; left: 0;
+  width: 34px; height: 34px;
+  background: var(--diag-accent-color, var(--red));
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+/* ---- Collage: one tall featured tile + two stacked tiles, instead of
+   a uniform 3-up row (used for attestations / proof grids). Flexbox
+   with stretch — rather than a CSS grid row-span — so the tall tile's
+   height always matches the stacked pair exactly, at any content
+   length, without needing a hard-coded container height. */
+.collage-3 { display: flex; gap: clamp(14px, 2vw, 22px); align-items: stretch; }
+.collage-3 .collage-a { flex: 1.3 1 0; position: relative; min-width: 0; }
+.collage-3 .collage-side { flex: 1 1 0; display: flex; flex-direction: column; gap: clamp(14px, 2vw, 22px); min-width: 0; }
+.collage-3 .collage-side > * { flex: 1; position: relative; }
+@media (max-width: 780px) {
+  .collage-3 { flex-direction: column; }
+  .collage-3 .collage-a { flex: none; aspect-ratio: 4 / 3; }
+  .collage-3 .collage-side { flex-direction: row; }
+  .collage-3 .collage-side > * { aspect-ratio: 4 / 3; }
+}
+
+/* ---- Parallelogram photo crop: a consistent diagonal motif for
+   small photo tiles (testimonials) that keeps their caption box
+   underneath perfectly rectangular and legible ---------------------- */
+.photo-slant { clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%); }
+@media (max-width: 640px) { .photo-slant { clip-path: none; } }
+
+/* ---- Left-aligned strip label (replaces centered eyebrow+heading
+   stacks in slim single-line sections) ------------------------------- */
+.strip-row {
+  display: flex; align-items: center; gap: clamp(16px, 3vw, 32px);
+  flex-wrap: wrap;
+}
+.strip-row .strip-label {
+  flex: none;
+  font-family: var(--font-display); font-weight: 700; font-size: 13px;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
+  white-space: nowrap;
+}
+.strip-row .strip-rule { flex: 1 1 40px; height: 1px; background: rgba(255,255,255,0.16); min-width: 24px; }
+
+/* ---- Brick-offset stagger for tile grids (2nd/4th tile dropped down
+   a notch, so a 2x2 tile block doesn't read as a flat table) --------- */
+.stagger-alt > *:nth-child(2), .stagger-alt > *:nth-child(4) { margin-top: 22px; }
+@media (max-width: 480px) {
+  .stagger-alt > *:nth-child(2), .stagger-alt > *:nth-child(4) { margin-top: 0; }
+}

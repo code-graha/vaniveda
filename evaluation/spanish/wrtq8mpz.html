@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test de Espa&ntilde;ol | VaniVeda</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Multiple choice, matching, true/false and sentence-building. 20 questions, A1–B2.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VaniVeda">
+<meta property="og:title" content="Test de Espa&ntilde;ol">
+<meta property="og:description" content="Multiple choice, matching, true/false and sentence-building. 20 questions, A1–B2.">
+<meta property="og:url" content="https://www.vaniveda.com/evaluation/spanish/wrtq8mpz">
+<meta property="og:image" content="https://www.vaniveda.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="VaniVeda">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Test de Espa&ntilde;ol">
+<meta name="twitter:description" content="Multiple choice, matching, true/false and sentence-building. 20 questions, A1–B2.">
+<meta name="twitter:image" content="https://www.vaniveda.com/assets/og-image.png">
+<meta name="twitter:image:alt" content="VaniVeda">
+<link rel="icon" type="image/png" href="../../assets/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="shortcut icon" href="../../assets/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="VaniVeda">
+<link rel="manifest" href="../../assets/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles.css">
+<script src="../../assets/config.js"></script>
+<style>
+  body { background: var(--graphite); }
+
+  .ft-header { padding: 22px clamp(20px,4vw,40px); }
+  .ft-header img { height: 26px; }
+
+  .ft-main { padding: 10px clamp(16px,4vw,40px) 60px; display: flex; justify-content: center; }
+  .ft-shell {
+    width: 100%; max-width: 760px; background: #fff; color: var(--text);
+    padding: clamp(28px,4vw,52px); box-shadow: 0 30px 70px rgba(0,0,0,0.35);
+  }
+
+  .ft-progress { display: flex; gap: 10px; margin-bottom: 34px; }
+  .ft-progress-step {
+    flex: 1; text-align: center; padding-bottom: 12px; border-bottom: 3px solid var(--border);
+    font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .ft-progress-step .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%; background: var(--border); color: #fff;
+    font-size: 11px; margin-right: 6px;
+  }
+  .ft-progress-step.active { color: var(--text); border-color: var(--red); }
+  .ft-progress-step.active .num, .ft-progress-step.done .num { background: var(--red); }
+
+  .ft-step[hidden] { display: none; }
+
+  .ft-q-progress { height: 4px; background: var(--border); margin-bottom: 18px; }
+  .ft-q-bar { display: block; height: 100%; background: var(--red); width: 0; transition: width 0.3s ease; }
+  .ft-q-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+  .ft-q-count { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-soft); }
+  .ft-q-level { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; background: var(--graphite); padding: 5px 10px; }
+  .ft-q-type { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); display: block; margin-bottom: 10px; }
+  .ft-q-prompt { font-family: var(--font-display); font-weight: 600; font-size: clamp(19px,2.4vw,24px); line-height: 1.3; margin: 0 0 22px; }
+  .ft-q-passage { background: var(--bg); border-left: 3px solid var(--border); padding: 16px 18px; font-size: 15px; line-height: 1.65; color: var(--text-soft); margin-bottom: 18px; }
+
+  .ft-match { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; position: relative; }
+  .ft-match-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .ft-match-item {
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--border); background: #fff; padding: 13px 14px; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-align: left; width: 100%;
+  }
+  .ft-match-item:hover { border-color: var(--red); }
+  .ft-match-item.armed { border-color: var(--red); background: rgba(214,40,57,0.06); color: var(--red); }
+  .ft-match-item.paired { border-color: var(--border); background: var(--bg); color: var(--muted); cursor: default; }
+  .ft-match-item.paired:hover { border-color: var(--border); }
+  .ft-match-badge {
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+    width: 20px; height: 20px; border-radius: 50%; background: var(--border); color: #fff;
+    font-size: 11px; font-weight: 700; opacity: 0; transition: opacity 0.15s, background 0.15s;
+  }
+
+  .ft-rearrange-answer {
+    display: flex; flex-wrap: wrap; gap: 8px; min-height: 54px;
+    border: 1px dashed var(--border); background: var(--bg); padding: 10px; margin-bottom: 16px;
+  }
+  .ft-rearrange-answer:empty::before { content: 'Toca las palabras de abajo para construir la frase'; color: var(--muted); font-size: 13px; align-self: center; }
+  .ft-rearrange-bank { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ft-chip {
+    display: inline-flex; align-items: center; border: 1px solid var(--border); background: #fff;
+    padding: 10px 14px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .ft-chip:hover { border-color: var(--red); color: var(--red); }
+  .ft-chip.used { opacity: 0.35; pointer-events: none; }
+  .ft-rearrange-answer .ft-chip { background: var(--graphite); color: #fff; border-color: var(--graphite); }
+  .ft-rearrange-answer .ft-chip:hover { border-color: var(--red); }
+
+  .ft-tf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .ft-result-score { text-align: center; padding: 30px 0 10px; }
+  .ft-result-score .big { font-family: var(--font-display); font-weight: 800; font-size: clamp(52px,8vw,80px); line-height: 1; color: var(--red); }
+  .ft-result-level {
+    text-align: center; font-family: var(--font-display); font-weight: 700; font-size: 22px;
+    text-transform: uppercase; background: var(--graphite); color: #fff; padding: 14px; margin: 18px 0;
+  }
+  .ft-result-desc { font-size: 16px; line-height: 1.65; color: var(--text-soft); text-align: center; max-width: 520px; margin: 0 auto 28px; }
+
+  @media (max-width: 560px) {
+    .ft-match { gap: 10px 10px; }
+    .ft-match-item { padding: 11px 10px; font-size: 13px; }
+    .ft-tf-row { grid-template-columns: 1fr; }
+    .ft-progress-step span:not(.num) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="ft-header">
+  <a href="../..//"><img src="../../assets/vaniveda_logo_HD_transparent.png" alt="VaniVeda"></a>
+</header>
+
+<main class="ft-main">
+  <div class="ft-shell diag-accent">
+
+    <div class="ft-progress">
+      <div class="ft-progress-step active" data-ft-progress="1"><span class="num">1</span><span>Tus datos</span></div>
+      <div class="ft-progress-step" data-ft-progress="2"><span class="num">2</span><span>Examen</span></div>
+      <div class="ft-progress-step" data-ft-progress="3"><span class="num">3</span><span>Resultado</span></div>
+    </div>
+
+    <!-- STEP 1: student details -->
+    <section class="ft-step" data-ft-step="1">
+      <span class="eyebrow">Test de nivel</span>
+      <h1 style="font-size:clamp(28px,4vw,38px);margin-bottom:14px">Descubre tu nivel</h1>
+      <p class="lede" style="margin-bottom:26px">20 preguntas &mdash; opci&oacute;n m&uacute;ltiple, relacionar y construcci&oacute;n de frases &mdash; de nivel A1 a B2. Aproximadamente 15 minutos.</p>
+
+      <form data-ft-details-form novalidate>
+        <div class="stack" style="--gap:16px">
+          <label class="field" data-ft-field="name">
+            <span class="label">Nombre completo</span>
+            <input type="text" data-ft-input="name" autocomplete="name">
+            <span class="field-error">Por favor, introduce tu nombre.</span>
+          </label>
+          <label class="field" data-ft-field="phone">
+            <span class="label">Tel&eacute;fono / WhatsApp</span>
+            <div class="phone-group">
+              <div class="phone-code-select" data-phone-select>
+                <button type="button" class="phone-code-trigger" data-phone-trigger aria-haspopup="listbox" aria-expanded="false" aria-label="C&oacute;digo de pa&iacute;s">
+                  <img data-phone-trigger-flag src="https://flagcdn.com/w40/in.png" alt="">
+                  <span data-phone-trigger-code>+91</span>
+                  <svg class="phone-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <ul class="phone-code-list" data-phone-list role="listbox" hidden>
+                  <li role="option" data-code="+91" data-active=""><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/in.png" alt=""><span>India</span><span class="code">+91</span></li>
+                  <li role="option" data-code="+34"><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/es.png" alt=""><span>Espa&ntilde;a</span><span class="code">+34</span></li>
+                  <li role="option" data-code="+52"><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/mx.png" alt=""><span>M&eacute;xico</span><span class="code">+52</span></li>
+                  <li role="option" data-code="+1"><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/ca.png" alt=""><span>Canad&aacute;</span><span class="code">+1</span></li>
+                  <li role="option" data-code="+33"><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/fr.png" alt=""><span>Francia</span><span class="code">+33</span></li>
+                  <li role="option" data-code="+41"><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/ch.png" alt=""><span>Suiza</span><span class="code">+41</span></li>
+                  <li role="option" data-code="+44"><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/gb.png" alt=""><span>Reino Unido</span><span class="code">+44</span></li>
+                  <li role="option" data-code="+971"><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/ae.png" alt=""><span>Emiratos &Aacute;rabes Unidos</span><span class="code">+971</span></li>
+                  <li role="option" data-code="+61"><img loading="lazy" width="20" height="15" src="https://flagcdn.com/w40/au.png" alt=""><span>Australia</span><span class="code">+61</span></li>
+                </ul>
+                <input type="hidden" data-ft-phone-code value="+91">
+              </div>
+              <input type="tel" data-ft-input="phone" autocomplete="tel" placeholder="98765 43210">
+            </div>
+            <span class="field-error">Por favor, introduce un n&uacute;mero de tel&eacute;fono v&aacute;lido.</span>
+          </label>
+          <label class="field" data-ft-field="email">
+            <span class="label">Correo electr&oacute;nico</span>
+            <input type="email" data-ft-input="email" autocomplete="email">
+            <span class="field-error">Por favor, introduce una direcci&oacute;n de correo v&aacute;lida.</span>
+          </label>
+        </div>
+        <label class="check-row" data-ft-field="agree">
+          <input type="checkbox" data-ft-input="agree">
+          <span>Acepto los <a href="../../terms" target="_blank" rel="noopener">T&eacute;rminos y Condiciones</a> y la <a href="../../privacy" target="_blank" rel="noopener">Pol&iacute;tica de Privacidad</a>.</span>
+        </label>
+        <p class="check-row-error">Por favor, acepta los T&eacute;rminos y Condiciones para continuar.</p>
+        <button class="btn btn-primary notch btn-full" type="submit" style="margin-top:18px">Empezar el test</button>
+      </form>
+    </section>
+
+    <!-- STEP 2: exam -->
+    <section class="ft-step" data-ft-step="2" hidden>
+      <div class="ft-q-progress"><span class="ft-q-bar" data-ft-qbar></span></div>
+      <div class="ft-q-meta">
+        <span class="ft-q-count">Pregunta <span data-ft-qnum>1</span>/<span data-ft-qtotal>20</span></span>
+        <span class="ft-q-level" data-ft-qlevel>A1</span>
+      </div>
+      <div data-ft-question-mount></div>
+      <div class="row" style="margin-top:26px">
+        <button type="button" class="quiz-back" data-ft-back>&larr; Anterior</button>
+        <button type="button" class="btn btn-primary btn-sm notch" data-ft-next style="margin-left:auto" disabled>Siguiente</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: result -->
+    <section class="ft-step" data-ft-step="3" hidden>
+      <div class="text-center">
+        <span class="eyebrow">Tu resultado</span>
+        <h2 data-ft-result-name>Aqu&iacute; est&aacute; tu resultado</h2>
+      </div>
+      <div class="ft-result-score">
+        <p style="font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Puntuaci&oacute;n</p>
+        <p class="big"><span data-ft-score>0</span><span style="font-size:28px;color:var(--muted)">/<span data-ft-total>20</span></span></p>
+      </div>
+      <p class="ft-result-level" data-ft-level-label>&mdash;</p>
+      <p class="ft-result-desc" data-ft-level-desc></p>
+      <div class="row" style="justify-content:center">
+        <button type="button" class="quiz-back" data-ft-restart>&larr; Repetir el test</button>
+        <a class="btn btn-primary notch" href="../../contact">Hablar con un coach VaniVeda</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<p style="text-align:center;color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding-bottom:30px">&copy; 2026 VaniVeda</p>
+
+<script src="../../assets/main.js" defer></script>
+<script>
+(function () {
+  // Tracks which page this result came from even after a rename — the ID is
+  // derived from this page's own current filename, not hardcoded.
+  var TEST_ID = 'spanish-' + location.pathname.split('/').pop().replace(/\?$/i, '');
+
+  var QUESTIONS = [
+    { level: 'A1', type: 'mcq', prompt: '¿Cómo se dice « Hello » en español?', options: ['Hola', 'Adiós', 'Gracias', 'Perdón'], answer: 'Hola' },
+    { level: 'A1', type: 'mcq', prompt: 'Elige el artículo correcto: ___ casa es grande.', options: ['El', 'La', 'Los', 'Las'], answer: 'La' },
+    { level: 'A1', type: 'mcq', prompt: 'Yo ___ estudiante.', options: ['soy', 'eres', 'es', 'somos'], answer: 'soy' },
+    { level: 'A2', type: 'match', prompt: 'Relaciona cada día con su traducción.', pairs: [['Lunes', 'Monday'], ['Martes', 'Tuesday'], ['Miércoles', 'Wednesday'], ['Jueves', 'Thursday']] },
+    { level: 'A2', type: 'rearrange', prompt: 'Ordena las palabras correctamente.', words: ['como', 'una', 'Yo', 'manzana.'], answer: ['Yo', 'como', 'una', 'manzana.'] },
+    { level: 'B1', type: 'mcq', prompt: 'Ayer, yo ___ al cine cuando empezó a llover.', options: ['iba', 'fui', 'voy', 'iré'], answer: 'iba' },
+    { level: 'B1', type: 'truefalse', passage: 'María trabaja en una escuela. Enseña español a los niños desde hace cinco años. Le encanta su profesión.', prompt: 'María enseña matemáticas.', answer: false },
+    { level: 'B2', type: 'rearrange', prompt: 'Ordena las palabras correctamente.', words: ['A', 'pesar', 'de', 'la', 'lluvia,', 'salimos.'], answer: ['A', 'pesar', 'de', 'la', 'lluvia,', 'salimos.'] },
+    { level: 'B2', type: 'mcq', prompt: 'Es necesario que tú ___ tus deberes antes de salir.', options: ['haces', 'harás', 'hagas', 'harías'], answer: 'hagas' },
+    { level: 'B2', type: 'match', prompt: 'Relaciona cada expresión con su significado.', pairs: [['Estar en las nubes', 'To daydream'], ['Flechazo', 'Love at first sight'], ['Dar plantón', 'To stand someone up'], ['Dar la lata', 'To annoy someone']] },
+    { level: 'A1', type: 'mcq', prompt: '¿Cuál es el plural de « el lápiz »?', options: ['Los lápizes', 'Los lápices', 'Los lápizs', 'Los lápiz'], answer: 'Los lápices' },
+    { level: 'A1', type: 'mcq', prompt: 'Nosotros ___ español todos los días.', options: ['hablo', 'hablas', 'hablamos', 'hablan'], answer: 'hablamos' },
+    { level: 'A2', type: 'truefalse', passage: 'Ahmed vive en Madrid desde hace tres años. Trabaja como ingeniero en una gran empresa. Los fines de semana, le gusta jugar al fútbol con sus amigos.', prompt: 'Ahmed juega al tenis los fines de semana.', answer: false },
+    { level: 'A2', type: 'match', prompt: 'Relaciona cada estación con su traducción.', pairs: [['Primavera', 'Spring'], ['Verano', 'Summer'], ['Otoño', 'Autumn'], ['Invierno', 'Winter']] },
+    { level: 'A2', type: 'rearrange', prompt: 'Ordena las palabras correctamente.', words: ['el', 'gusta', 'Me', 'chocolate.'], answer: ['Me', 'gusta', 'el', 'chocolate.'] },
+    { level: 'B1', type: 'mcq', prompt: 'Si tuviera más tiempo, ___ más a menudo.', options: ['viajo', 'viajaré', 'viajaría', 'viajaba'], answer: 'viajaría' },
+    { level: 'B1', type: 'truefalse', passage: 'El museo estará cerrado por renovación desde el 1 de marzo hasta finales de mayo. Los visitantes podrán seguir las obras en el sitio web.', prompt: 'El museo reabrirá en abril.', answer: false },
+    { level: 'B1', type: 'match', prompt: 'Relaciona cada profesión con su traducción.', pairs: [['Abogado', 'Lawyer'], ['Médico', 'Doctor'], ['Profesor', 'Teacher'], ['Ingeniero', 'Engineer']] },
+    { level: 'B2', type: 'mcq', prompt: 'Aunque ___ cansado, terminó el proyecto a tiempo.', options: ['está', 'esté', 'estaba', 'estará'], answer: 'esté' },
+    { level: 'B2', type: 'rearrange', prompt: 'Ordena las palabras correctamente.', words: ['haber', 'Él', 'llegado', 'debería', 'antes.'], answer: ['Él', 'debería', 'haber', 'llegado', 'antes.'] }
+  ];
+
+  var LEVELS = {
+    'Pre-A1': { label: 'Principiante absoluto', desc: 'Estás empezando tu aprendizaje del español. Comienza con los saludos, los números y el vocabulario cotidiano antes de tu primera clase real.' },
+    'A1': { label: 'A1 · Descubrimiento', desc: 'Dominas los saludos, las presentaciones y los intercambios sencillos del día a día.' },
+    'A2': { label: 'A2 · Supervivencia', desc: 'Te desenvuelves en situaciones habituales — pedir en un restaurante, preguntar direcciones, hablar de tu rutina.' },
+    'B1': { label: 'B1 · Umbral', desc: 'Puedes mantener una conversación, manejar imprevistos y expresar una opinión — el nivel donde realmente comienza la preparación para el DELE y el SIELE.' },
+    'B2': { label: 'B2 · Avanzado', desc: 'Argumentas un punto de vista, sigues un texto complejo y hablas con fluidez y espontaneidad — el nivel al que aspiran la mayoría de los candidatos a certificaciones oficiales de español.' }
+  };
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  var state = {
+    details: { name: '', phone: '', email: '' },
+    qIndex: 0,
+    answers: [], // { correct: bool }
+    current: null // working state for the question being rendered
+  };
+
+  var qTotalEl = document.querySelector('[data-ft-qtotal]');
+  if (qTotalEl) qTotalEl.textContent = QUESTIONS.length;
+  var totalScoreEl = document.querySelector('[data-ft-total]');
+  if (totalScoreEl) totalScoreEl.textContent = QUESTIONS.length;
+
+  function goToStep(step) {
+    document.querySelectorAll('[data-ft-step]').forEach(function (el) {
+      el.hidden = el.getAttribute('data-ft-step') !== String(step);
+    });
+    document.querySelectorAll('[data-ft-progress]').forEach(function (el) {
+      var n = parseInt(el.getAttribute('data-ft-progress'), 10);
+      el.classList.toggle('active', n === step);
+      el.classList.toggle('done', n < step);
+    });
+  }
+
+  /* ---------- Step 1 ---------- */
+  var detailsForm = document.querySelector('[data-ft-details-form]');
+  detailsForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var values = {};
+    var valid = true;
+    var firstInvalid = null;
+    ['name', 'phone', 'email'].forEach(function (key) {
+      var input = detailsForm.querySelector('[data-ft-input="' + key + '"]');
+      var field = detailsForm.querySelector('[data-ft-field="' + key + '"]');
+      var value = input.value.trim();
+      var ok = value.length > 0;
+      if (key === 'phone') {
+        ok = value.replace(/\D/g, '').length >= 7;
+        var code = detailsForm.querySelector('[data-ft-phone-code]').value;
+        value = code + ' ' + value;
+      }
+      if (ok && key === 'email') ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      field.classList.toggle('has-error', !ok);
+      if (!ok) { valid = false; if (!firstInvalid) firstInvalid = input; }
+      values[key] = value;
+    });
+
+    var agreeInput = detailsForm.querySelector('[data-ft-input="agree"]');
+    var agreeField = detailsForm.querySelector('[data-ft-field="agree"]');
+    agreeField.classList.toggle('has-error', !agreeInput.checked);
+    if (!agreeInput.checked) { valid = false; if (!firstInvalid) firstInvalid = agreeInput; }
+
+    if (!valid) { firstInvalid.focus(); return; }
+    state.details = values;
+    goToStep(2);
+    renderQuestion(0);
+  });
+
+  /* ---------- Step 2: question rendering ---------- */
+  var mount = document.querySelector('[data-ft-question-mount]');
+  var nextBtn = document.querySelector('[data-ft-next]');
+  var backBtn = document.querySelector('[data-ft-back]');
+
+  var PAIR_COLORS = ['#D62839', '#F5A623', '#1F2933', '#3E7DD8', '#0E9F6E', '#8A4FD1'];
+  var activeMatchRedraw = null;
+  window.addEventListener('resize', function () { if (activeMatchRedraw) activeMatchRedraw(); });
+
+  function setAnswered(correct) {
+    state.current = { correct: correct };
+    nextBtn.disabled = false;
+  }
+
+  function renderQuestion(i) {
+    state.qIndex = i;
+    state.current = null;
+    activeMatchRedraw = null;
+    nextBtn.disabled = true;
+    nextBtn.textContent = i === QUESTIONS.length - 1 ? 'Ver mi resultado' : 'Siguiente';
+    backBtn.style.visibility = i === 0 ? 'hidden' : 'visible';
+
+    var q = QUESTIONS[i];
+    document.querySelector('[data-ft-qnum]').textContent = i + 1;
+    document.querySelector('[data-ft-qlevel]').textContent = q.level;
+    document.querySelector('[data-ft-qbar]').style.width = (i / QUESTIONS.length * 100) + '%';
+
+    mount.innerHTML = '';
+
+    if (q.type === 'mcq') {
+      mount.appendChild(elType('Opción múltiple'));
+      mount.appendChild(elPrompt(q.prompt));
+      var opts = document.createElement('div');
+      opts.className = 'quiz-options';
+      q.options.forEach(function (opt) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quiz-option';
+        btn.textContent = opt;
+        btn.addEventListener('click', function () {
+          opts.querySelectorAll('.quiz-option').forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+          setAnswered(opt === q.answer);
+        });
+        opts.appendChild(btn);
+      });
+      mount.appendChild(opts);
+
+    } else if (q.type === 'truefalse') {
+      mount.appendChild(elType('Verdadero o falso'));
+      mount.appendChild(elPassage(q.passage));
+      mount.appendChild(elPrompt(q.prompt));
+      var row = document.createElement('div');
+      row.className = 'ft-tf-row';
+      [['Verdadero', true], ['Falso', false]].forEach(function (pair) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quiz-option';
+        btn.textContent = pair[0];
+        btn.addEventListener('click', function () {
+          row.querySelectorAll('.quiz-option').forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+          setAnswered(pair[1] === q.answer);
+        });
+        row.appendChild(btn);
+      });
+      mount.appendChild(row);
+
+    } else if (q.type === 'match') {
+      mount.appendChild(elType('Relacionar'));
+      mount.appendChild(elPrompt(q.prompt));
+      var wrap = document.createElement('div');
+      wrap.className = 'ft-match';
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', 'ft-match-lines');
+      wrap.appendChild(svg);
+      var leftCol = document.createElement('div');
+      var rightCol = document.createElement('div');
+      leftCol.className = 'stack'; leftCol.style.setProperty('--gap', '8px');
+      rightCol.className = 'stack'; rightCol.style.setProperty('--gap', '8px');
+
+      var rightOrder = shuffle(q.pairs.map(function (p, idx) { return idx; }));
+      var armed = null;
+      var made = [];
+
+      function colorFor(idx) { return PAIR_COLORS[idx % PAIR_COLORS.length]; }
+
+      function drawLines() {
+        if (!document.body.contains(wrap)) { activeMatchRedraw = null; return; }
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        var wrapRect = wrap.getBoundingClientRect();
+        svg.setAttribute('width', wrapRect.width);
+        svg.setAttribute('height', wrapRect.height);
+        svg.setAttribute('viewBox', '0 0 ' + wrapRect.width + ' ' + wrapRect.height);
+        made.forEach(function (m) {
+          var lb = leftCol.querySelector('[data-li="' + m.leftIdx + '"]');
+          var rb = rightCol.querySelector('[data-ri="' + m.rightIdx + '"]');
+          if (!lb || !rb) return;
+          var lr = lb.getBoundingClientRect(), rr = rb.getBoundingClientRect();
+          var x1 = lr.right - wrapRect.left, y1 = lr.top + lr.height / 2 - wrapRect.top;
+          var x2 = rr.left - wrapRect.left, y2 = rr.top + rr.height / 2 - wrapRect.top;
+          var mx = (x1 + x2) / 2;
+          var col = colorFor(m.leftIdx);
+          var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('d', 'M' + x1 + ',' + y1 + ' C ' + mx + ',' + y1 + ' ' + mx + ',' + y2 + ' ' + x2 + ',' + y2);
+          path.setAttribute('stroke', col);
+          path.setAttribute('stroke-width', '2.5');
+          path.setAttribute('fill', 'none');
+          path.setAttribute('stroke-linecap', 'round');
+          svg.appendChild(path);
+          [[x1, y1], [x2, y2]].forEach(function (pt) {
+            var dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            dot.setAttribute('cx', pt[0]); dot.setAttribute('cy', pt[1]); dot.setAttribute('r', '4');
+            dot.setAttribute('fill', col);
+            svg.appendChild(dot);
+          });
+        });
+      }
+      activeMatchRedraw = drawLines;
+
+      function refreshMatch() {
+        leftCol.querySelectorAll('[data-li]').forEach(function (b) {
+          var idx = parseInt(b.getAttribute('data-li'), 10);
+          var pair = made.filter(function (m) { return m.leftIdx === idx; })[0];
+          var badge = b.querySelector('.ft-match-badge');
+          b.classList.toggle('paired', !!pair);
+          b.classList.toggle('armed', armed === idx);
+          if (pair) { badge.style.opacity = '1'; badge.style.background = colorFor(idx); badge.textContent = String(idx + 1); }
+          else if (armed === idx) { badge.style.opacity = '1'; badge.style.background = 'var(--red)'; badge.textContent = '?'; }
+          else { badge.style.opacity = '0'; }
+        });
+        rightCol.querySelectorAll('[data-ri]').forEach(function (b) {
+          var idx = parseInt(b.getAttribute('data-ri'), 10);
+          var pair = made.filter(function (m) { return m.rightIdx === idx; })[0];
+          var badge = b.querySelector('.ft-match-badge');
+          b.classList.toggle('paired', !!pair);
+          if (pair) { badge.style.opacity = '1'; badge.style.background = colorFor(pair.leftIdx); badge.textContent = String(pair.leftIdx + 1); }
+          else { badge.style.opacity = '0'; }
+        });
+        drawLines();
+        if (made.length === q.pairs.length) {
+          setAnswered(made.every(function (m) { return m.leftIdx === m.rightIdx; }));
+        }
+      }
+
+      q.pairs.forEach(function (p, idx) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'ft-match-item';
+        var badge = document.createElement('span'); badge.className = 'ft-match-badge';
+        var label = document.createElement('span'); label.textContent = p[0];
+        b.appendChild(badge); b.appendChild(label);
+        b.setAttribute('data-li', idx);
+        b.addEventListener('click', function () {
+          if (made.some(function (m) { return m.leftIdx === idx; })) return;
+          armed = armed === idx ? null : idx;
+          refreshMatch();
+        });
+        leftCol.appendChild(b);
+      });
+      rightOrder.forEach(function (origIdx) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'ft-match-item';
+        var badge = document.createElement('span'); badge.className = 'ft-match-badge';
+        var label = document.createElement('span'); label.textContent = q.pairs[origIdx][1];
+        b.appendChild(badge); b.appendChild(label);
+        b.setAttribute('data-ri', origIdx);
+        b.addEventListener('click', function () {
+          if (made.some(function (m) { return m.rightIdx === origIdx; })) return;
+          if (armed === null) return;
+          made.push({ leftIdx: armed, rightIdx: origIdx });
+          armed = null;
+          refreshMatch();
+        });
+        rightCol.appendChild(b);
+      });
+
+      wrap.appendChild(leftCol); wrap.appendChild(rightCol);
+      mount.appendChild(wrap);
+      var hint = document.createElement('p');
+      hint.style.cssText = 'font-size:12px;color:var(--muted);margin-top:12px';
+      hint.textContent = 'Toca un término a la izquierda y luego su pareja a la derecha — una línea los conectará.';
+      mount.appendChild(hint);
+      requestAnimationFrame(drawLines);
+
+    } else if (q.type === 'rearrange') {
+      mount.appendChild(elType('Construye la frase'));
+      mount.appendChild(elPrompt(q.prompt));
+      var answerStrip = document.createElement('div');
+      answerStrip.className = 'ft-rearrange-answer';
+      var bank = document.createElement('div');
+      bank.className = 'ft-rearrange-bank';
+
+      var order = shuffle(q.words.map(function (w, idx) { return idx; }));
+      var placed = [];
+
+      function refreshRearrange() {
+        answerStrip.innerHTML = '';
+        placed.forEach(function (idx) {
+          var chip = document.createElement('button');
+          chip.type = 'button'; chip.className = 'ft-chip'; chip.textContent = q.words[idx];
+          chip.addEventListener('click', function () {
+            placed = placed.filter(function (p) { return p !== idx; });
+            refreshRearrange();
+          });
+          answerStrip.appendChild(chip);
+        });
+        bank.querySelectorAll('[data-bi]').forEach(function (b) {
+          var idx = parseInt(b.getAttribute('data-bi'), 10);
+          b.classList.toggle('used', placed.indexOf(idx) > -1);
+        });
+        if (placed.length === q.words.length) {
+          var built = placed.map(function (idx) { return q.words[idx]; });
+          setAnswered(built.join(' ') === q.answer.join(' '));
+        } else {
+          nextBtn.disabled = true;
+        }
+      }
+
+      order.forEach(function (idx) {
+        var chip = document.createElement('button');
+        chip.type = 'button'; chip.className = 'ft-chip'; chip.textContent = q.words[idx];
+        chip.setAttribute('data-bi', idx);
+        chip.addEventListener('click', function () {
+          if (placed.indexOf(idx) > -1) return;
+          placed.push(idx);
+          refreshRearrange();
+        });
+        bank.appendChild(chip);
+      });
+
+      mount.appendChild(answerStrip);
+      mount.appendChild(bank);
+    }
+  }
+
+  function elType(text) { var s = document.createElement('span'); s.className = 'ft-q-type'; s.textContent = text; return s; }
+  function elPrompt(text) { var p = document.createElement('p'); p.className = 'ft-q-prompt'; p.textContent = text; return p; }
+  function elPassage(text) { var p = document.createElement('p'); p.className = 'ft-q-passage'; p.textContent = text; return p; }
+
+  nextBtn.addEventListener('click', function () {
+    if (!state.current) return;
+    state.answers[state.qIndex] = state.current;
+    if (state.qIndex < QUESTIONS.length - 1) {
+      renderQuestion(state.qIndex + 1);
+    } else {
+      document.querySelector('[data-ft-qbar]').style.width = '100%';
+      showResults();
+    }
+  });
+  backBtn.addEventListener('click', function () {
+    if (state.qIndex === 0) return;
+    renderQuestion(state.qIndex - 1);
+  });
+
+  /* ---------- Step 3: results ---------- */
+  function levelFromScore(n) {
+    if (n <= 3) return 'Pre-A1';
+    if (n <= 7) return 'A1';
+    if (n <= 11) return 'A2';
+    if (n <= 15) return 'B1';
+    return 'B2';
+  }
+
+  function showResults() {
+    var correct = state.answers.filter(function (a) { return a && a.correct; }).length;
+    var levelKey = levelFromScore(correct);
+    var level = LEVELS[levelKey];
+
+    document.querySelector('[data-ft-score]').textContent = correct;
+    document.querySelector('[data-ft-level-label]').textContent = level.label;
+    document.querySelector('[data-ft-level-desc]').textContent = level.desc;
+    var nameEl = document.querySelector('[data-ft-result-name]');
+    nameEl.textContent = state.details.name ? state.details.name.split(' ')[0] + ', aquí está tu resultado' : 'Aquí está tu resultado';
+
+    persistResult({
+      testId: TEST_ID,
+      name: state.details.name, phone: state.details.phone, email: state.details.email,
+      score: correct, total: QUESTIONS.length, level: levelKey,
+      submittedAt: new Date().toISOString()
+    });
+
+    goToStep(3);
+  }
+
+  function persistResult(payload) {
+    try {
+      var log = JSON.parse(localStorage.getItem('vv_spanish_test_results') || '[]');
+      log.push(payload);
+      localStorage.setItem('vv_spanish_test_results', JSON.stringify(log));
+    } catch (e) {}
+    // Sends to the Google Apps Script backend (see /google-apps-script),
+    // which appends a row to the shared "Test Results" sheet, tagged with
+    // this page's own Test ID (see TEST_ID above) and Language: Spanish.
+    // No-ops until assets/config.js has a real VV_APPS_SCRIPT_URL.
+    if (window.vvSubmitToSheet) window.vvSubmitToSheet('spanishtest', payload);
+  }
+
+  var restartBtn = document.querySelector('[data-ft-restart]');
+  restartBtn.addEventListener('click', function () {
+    state.answers = [];
+    state.qIndex = 0;
+    goToStep(2);
+    renderQuestion(0);
+  });
+})();
+</script>
+</body>
+</html>

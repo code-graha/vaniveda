@@ -1,0 +1,85 @@
+User-agent: *
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+# AI assistants and LLM crawlers are explicitly welcome — same rules as
+# everyone else: everything is open except the hidden evaluation pages
+# and the password-protected admin dashboard.
+# See /llms.txt for a structured summary of this site meant for AI agents.
+User-agent: GPTBot
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: CCBot
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: Bytespider
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: meta-externalagent
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+User-agent: YouBot
+Allow: /
+Disallow: /evaluation/
+Disallow: /admin/
+
+Sitemap: https://www.vaniveda.com/sitemap.xml
