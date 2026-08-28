@@ -82,4 +82,4 @@ Allow: /
 Disallow: /evaluation/
 Disallow: /admin/
 
-Sitemap: https://www.vaniveda.com/sitemap.xml
+Sitemap: https://vaniveda.com/sitemap.xml
