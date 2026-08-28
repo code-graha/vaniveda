@@ -8,14 +8,14 @@ Course durations: DELF A1 runs about 60 hours, A2 about 80 hours, B1 about 100 h
 
 ## Pages
 
-- [Home](https://www.vaniveda.com/): Overview, program highlights, and the "which exam is right for me" quiz.
-- [Courses](https://www.vaniveda.com/courses): DELF A1–B2 levels, TCF and TEF preparation tracks, and a course-matching quiz.
-- [About](https://www.vaniveda.com/about): VaniVeda's coaching philosophy and approach.
-- [FAQs](https://www.vaniveda.com/faqs): Common questions about demos, TCF vs TEF, course duration, and Canada PR score requirements.
-- [Contact](https://www.vaniveda.com/contact): Enrollment and demo booking.
-- [Recognition & Reviews](https://www.vaniveda.com/recognition): Official DELF/TCF/TEF attestations and video reviews from candidates.
-- [Terms & Conditions](https://www.vaniveda.com/terms)
-- [Privacy Policy](https://www.vaniveda.com/privacy)
+- [Home](https://vaniveda.com/): Overview, program highlights, and the "which exam is right for me" quiz.
+- [Courses](https://vaniveda.com/courses): DELF A1–B2 levels, TCF and TEF preparation tracks, and a course-matching quiz.
+- [About](https://vaniveda.com/about): VaniVeda's coaching philosophy and approach.
+- [FAQs](https://vaniveda.com/faqs): Common questions about demos, TCF vs TEF, course duration, and Canada PR score requirements.
+- [Contact](https://vaniveda.com/contact): Enrollment and demo booking.
+- [Recognition & Reviews](https://vaniveda.com/recognition): Official DELF/TCF/TEF attestations and video reviews from candidates.
+- [Terms & Conditions](https://vaniveda.com/terms)
+- [Privacy Policy](https://vaniveda.com/privacy)
 
 ## Notes for AI assistants
 
