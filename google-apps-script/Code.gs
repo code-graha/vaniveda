@@ -183,7 +183,7 @@ function ensureAllSheetsExist_() {
  * the Phone column — those show as #ERROR! because Sheets auto-converted a
  * leading "+91..." into a broken formula. The original digits aren't
  * actually lost: getFormula() still returns that formula's source text
- * (e.g. "=+91 96542 24342"), just stripped of the "=" Sheets prepended.
+ * (e.g. "=+91 93116 15976"), just stripped of the "=" Sheets prepended.
  * This finds every #ERROR! cell in each sheet's Phone column — every
  * per-form sheet (Contact Enrolments, Course Quiz Leads, Test Results)
  * *and* Students, which has its own separate Phone column written by
@@ -715,7 +715,7 @@ function buildRow_(formType, b) {
 }
 
 /**
- * A phone number like "+91 96542 24342" written as a plain string is
+ * A phone number like "+91 93116 15976" written as a plain string is
  * exactly the kind of value Sheets tries to auto-parse as a formula —
  * anything starting with +, -, or = triggers that, both from manual
  * typing and from a script writing the same string via appendRow/
