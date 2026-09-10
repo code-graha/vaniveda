@@ -216,7 +216,7 @@ doesn't loosen that.
   page — it starts as "New" on every new row and only ever changes after
   that as a side effect of a student-level status change (see "Students:
   one profile per person" below).
-- **Phone numbers and `#ERROR!`**: a value like `+91 96542 24342` written
+- **Phone numbers and `#ERROR!`**: a value like `+91 93116 15976` written
   into a cell — by this script or by typing it in by hand — gets
   auto-parsed by Sheets as a formula attempt (anything starting with `+`,
   `-`, or `=` does), which fails and shows `#ERROR!` ("Formula parse
